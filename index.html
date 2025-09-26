@@ -113,58 +113,141 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
 .fuel-center{ display:flex; align-items:center; gap:8px; white-space:nowrap }
 .health-head{ display:flex; align-items:center; justify-content:space-between; } .health-head .health-label{ font-size:12px; color:#ffd6a8; letter-spacing:.08em; text-transform:uppercase } .health-head #health-value{ font-family:Orbitron; font-size:18px; font-weight:800; color:#fff2e6; line-height:1.2 }
 .card + .card{ margin-top:  4px }
+
+/* === HUD BOXED THEME (top-center) === */
+.hud-container{
+  position:fixed; top:10px; left:50%; transform:translateX(-50%);
+  width:auto; max-width: 92vw;
+  display:block; pointer-events:none; z-index:60;
+}
+.hud-grid{
+  display:grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(72px,auto);
+  gap:6px;
+  align-items:start;
+  justify-content:center;
+}
+.hud-box{
+  pointer-events:auto;
+  background:rgba(0,0,0,0.45);
+  border:1px solid rgba(255,180,90,.45);
+  border-radius:6px;
+  padding:6px 8px;
+  min-width:72px;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 0 10px rgba(255,150,50,.25), inset 0 0 0 1px rgba(255,140,0,.08);
+}
+.hud-box .label{
+  font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+  color:#ffd6a8; text-align:center; margin-bottom:2px;
+}
+.hud-box .value{
+  font-family: Orbitron, Inter, system-ui, sans-serif;
+  font-size:18px; font-weight:800; line-height:1; text-align:center;
+  color:#fff2e6; text-shadow:0 0 8px rgba(255,160,60,.5);
+}
+.hud-box .unit{
+  font-size:10px; color:#ffcc99; letter-spacing:.16em; text-transform:uppercase;
+  display:block; text-align:center; margin-top:2px;
+}
+.hud-mini-bar{
+  height:4px; width:100%; border-radius:4px; overflow:hidden;
+  background:#0a1118; margin-top:4px;
+}
+.hud-mini-bar > span{
+  display:block; height:100%; width:100%;
+  background:linear-gradient(90deg,#ff9933,#ffcc66);
+}
+
+/* RPM special: bar next to value */
+.hud-rpm{
+  display:grid; grid-template-columns:auto 1fr; gap:6px; align-items:center;
+}
+.hud-rpm .value{ text-align:right; font-size:16px; }
+.hud-rpm .bar{ height:6px; border:1px solid var(--tesla-stroke); border-radius:6px; overflow:hidden; }
+.hud-rpm .bar > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#ff9933,#ffcc66,#ffff99); }
+
+/* Indicators row (optional) */
+.hud-indicators{
+  display:flex; gap:6px; justify-content:center; margin-top:4px;
+}
+.hud-indicators .icon{
+  width:16px; height:16px; border-radius:6px;
+}
+
+/* Media container remains bottom-right */
+.media-container{
+  position:fixed; right:10px; bottom:35px;
+  width:300px; height:auto; display:block; pointer-events:none; z-index:40;
+}
+.media-container .card{ pointer-events:auto; }
+#yt-player{ height:80px !important; }
+
 </style>
 </head>
 <body>
-<div class="dashboard-container">
-  <div id="yt-search-float" class="search-float hidden">
-    <div class="search-head"><div class="search-title">Hasil Pencarian</div>
-      <button class="search-close" id="yt-search-close">×</button></div>
-    <div class="search-list" id="yt-search-list"></div>
-  </div>
-  <div class="speedometer-container card">
-    <div class="inner">
-      <div class="brand-logo-wrap"><img class="brand-logo" src="logo-agroventura.png" alt="Agro Ventura Corp. logo"></div>
-      <div class="speed-row">
-        <div class="unit">Speed
-        <div class="horizontal-indicators-container">
-        <svg id="left-indicator-icon" class="icon" viewBox="0 0 24 24"><path d="M14 7l-5 5 5 5V7z"/></svg>
-        <svg id="engine-icon" class="icon" viewBox="0 0 24 24"><path d="M3 10h2v4H3v-4zm18 0h-2v4h2v-4zM7 7h10v10H7V7z"/></svg>
-        <svg id="headlights-icon" class="icon" viewBox="0 0 24 24"><circle cx="8" cy="12" r="3"/><path d="M12 9h8M12 12h8M12 15h8"/></svg>
-        <svg id="seatbelt-icon" class="icon" viewBox="0 0 24 24"><path d="M5 7l14 10M19 7L5 17"/></svg>
-        <svg id="right-indicator-icon" class="icon" viewBox="0 0 24 24"><path d="M10 7l5 5-5 5V7z"/></svg>
+
+<div class="hud-container">
+  <div class="hud-grid">
+    <div class="hud-box" id="hud-speed">
+      <div class="label">Speed</div>
+      <div id="speed-value" class="value">000</div>
+      <span id="speed-unit" class="unit">km/h</span>
+    </div>
+    <div class="hud-box" id="hud-rpm">
+      <div class="label">RPM</div>
+      <div class="hud-rpm">
+        <div id="rpm-value" class="value">0000</div>
+        <div class="bar"><span id="rpm-bar-fill"></span></div>
       </div>
-        </div>
-        <div id="speed-value">000</div>
-        <div id="speed-unit">km/h</div>
+    </div>
+    <div class="hud-box" id="hud-gear">
+      <div class="label">Gear</div>
+      <div class="value"><span id="gear-value">N</span></div>
+    </div>
+    <div class="hud-box" id="hud-fuel">
+      <div class="label">Fuel</div>
+      <div class="value"><span id="fuel-value">100</span></div>
+    </div>
+    <div class="hud-box" id="hud-health">
+      <div class="label">Health</div>
+      <div class="value"><span id="health-value">100%</span></div>
+      <div class="hud-mini-bar"><span id="health-bar"></span></div>
+    </div>
+  </div>
+  <div class="hud-indicators">
+    <svg id="left-indicator-icon" class="icon" viewBox="0 0 24 24"><path d="M14 7l-5 5 5 5V7z"/></svg>
+    <svg id="engine-icon" class="icon" viewBox="0 0 24 24"><path d="M3 10h2v4H3v-4zm18 0h-2v4h2v-4zM7 7h10v10H7V7z"/></svg>
+    <svg id="headlights-icon" class="icon" viewBox="0 0 24 24"><circle cx="8" cy="12" r="3"/><path d="M12 9h8M12 12h8M12 15h8"/></svg>
+    <svg id="seatbelt-icon" class="icon" viewBox="0 0 24 24"><path d="M5 7l14 10M19 7L5 17"/></svg>
+    <svg id="right-indicator-icon" class="icon" viewBox="0 0 24 24"><path d="M10 7l5 5-5 5V7z"/></svg>
+  </div>
+</div>
+
+</div>
+  
+
+      
+
+      <div id="rpm-bar-new"><span id="rpm-bar-fill"></span></div>
+      </div>
+
+      </div>
+        
       </div>
 
       
 
-      <div class="rpm-gauge">
-        <div id="rpm-value">0000</div>
-        <div id="rpm-bar-new"><span id="rpm-bar-fill"></span></div>
-      </div>
-
-      <div class="stats-row">
-        <div class="gear-stat-bar"><div class="gear-label"><span>GEAR</span> <span id="gear-value">N</span></div></div>
-        <div class="fuel-gauge">
-          <div class="fuel-center"><div class="fuel-label">FUEL</div><div id="fuel-value" class="fuel-display">100</div></div>
-        </div>
-      </div>
-
-      <div class="health-stat-bar">
-        <div class="health-head">
-          <div class="health-label">HEALTH</div>
-          <div id="health-value">100%</div>
-        </div>
-        <div class="health-bar-background"><div id="health-bar"></div></div>
-      </div>
-
       </div>
   </div>
 
-  <div class="media-card card">
+  
+</div>
+
+
+<div class="media-container">
+<div class="media-card card">
     <div class="inner">
       <div class="media-mini">
         <input id="yt-url" placeholder="Ketik kata kunci YouTube…">
@@ -181,9 +264,7 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
         <div id="yt-status">Idle · <span id="yt-time">0:00</span></div>
       </div>
     </div>
-  </div>
 </div>
-
 <!-- Audio elements (IDs preserved from working file) -->
 <audio id="engine-start-sound" preload="none"><source src="engineon.mp3" type="audio/mpeg"></audio>
 <audio id="engine-stop-sound" preload="none"><source src="engineoff.mp3" type="audio/mpeg"></audio>
