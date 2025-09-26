@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<!-- saved from url=(0079)https://www.harmony.rayain.my.id/spd/customer/BRAQEZBR_Leonie_Nakamoto_82325_i/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEMINIM-STYLE SPEEDOMETER</title>
+    <!-- Menggunakan font yang diperlukan untuk tema feminim -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="css2" rel="stylesheet">
+    <!-- Font untuk tema bold -->
+    <link href="css2(1)" rel="stylesheet">
+    <style>
+/* FEMINIM STYLE SPEEDOMETER */
+
+* {
+    user-select: none;
+    user-drag: none;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Feminim Color Palette */
+    --fem-bg: #fff0f5; /* Lavender Blush */
+    --fem-surface: #ffe6f0; /* Light Pink */
+    --fem-panel: #ffd6e7; /* Pink Mist */
+    --fem-text-primary: #800080; /* Purple */
+    --fem-text-secondary: #c71585; /* Medium Violet Red */
+    --fem-accent-pink: #ff69b4; /* Hot Pink */
+    --fem-accent-lavender: #dda0dd; /* Plum */
+    --fem-accent-rose: #ffb6c1; /* Light Pink */
+    --fem-grid: #e6bcde; /* Soft Purple */
+    --fem-heart-icon: #ff6b9d; /* Coral Pink */
+
+    /* Typography */
+    --font-fem-primary: 'Dancing Script', cursive;
+    --font-fem-secondary: 'Quicksand', sans-serif;
+
+    /* Dimensions */
+    --dashboard-width: 450px;
+    --dashboard-height: 400px;
+}
+
+body {
+    background: transparent!important;
+    font-family: var(--font-fem-secondary);
+    color: var(--fem-text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 1rem;
+}
+
+/* Dashboard Loading Indicator */
+.dashboard-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 100;
+    animation: fadeOutDashboardLoading 0.5s ease-out 2.5s forwards;
+}
+
+.dashboard-spinner {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--fem-grid);
+    border-top: 2px solid var(--fem-accent-pink);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+.dashboard-loading-text {
+    font-family: var(--font-fem-primary);
+    font-size: 1rem;
+    color: var(--fem-accent-pink);
+    letter-spacing: 1px;
+    animation: loadingTextPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes loadingTextPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+@keyframes fadeOutDashboardLoading {
+    0% { opacity: 1; visibility: visible; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+/* Main Dashboard - Curved/Rounded Design */
+.dashboard-container {
+    position: fixed;
+    bottom: 35px;
+    right: 0px;
+    width: var(--dashboard-width);
+    height: var(--dashboard-height);
+    background: transparent !important;
+    border-top-left-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.dashboard-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    opacity: 0.95;
+    z-index: -11;
+}
+
+/* Main Speedometer Container */
+.speedometer-container {
+    position: fixed;
+    bottom: 60px;
+    right: 100px;
+    transform: translate(-50%, -50%);
+    z-index: 21000;
+}
+
+/* Central Speedometer - Rounded Design */
+.speedometer {
+    position: relative;
+    width: 280px;
+    height: 160px;
+    border-radius: 20px;
+    background-color: var(--fem-panel);
+    border: 2px solid var(--fem-grid);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: inset 0 0 15px rgba(221, 160, 221, 0.3);
+    overflow: hidden;
+}
+
+/* Decorative elements */
+.speedometer::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: radial-gradient(circle, rgba(255,182,193,0.1) 0%, rgba(255,182,193,0) 70%);
+    z-index: -1;
+}
+
+/* Center digital display */
+.speed-center {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.speed-display {
+    font-family: var(--font-fem-primary);
+    font-size: clamp(6rem, 8vw, 1.8rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--fem-accent-pink);
+    text-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
+    transition: color 0.3s;
+}
+
+.speed-unit {
+    font-family: var(--font-fem-secondary);
+    font-size: clamp(2rem, 2vw, 0.7rem);
+    color: var(--fem-text-secondary);
+    margin-top: 5px;
+}
+
+/* Horizontal Indicators Container - Rounded */
+.horizontal-indicators-container {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 370px;
+    height: 40px;
+    background-color: var(--fem-panel);
+    border-radius: 20px;
+    padding: 8px 15px;
+    z-index: 25000;
+    border: 2px solid var(--fem-grid);
+    box-shadow: inset 0 0 10px rgba(221, 160, 221, 0.3);
+}
+
+.horizontal-indicators-container .icon {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    fill: var(--fem-text-secondary);
+    stroke: var(--fem-text-secondary);
+    border-radius: 50%;
+    background: transparent;
+    padding: 6px;
+    border: 1px solid rgba(199, 21, 133, 0.3);
+    flex-shrink: 0;
+}
+
+.horizontal-indicators-container .icon:hover {
+    transform: scale(1.1);
+}
+
+.horizontal-indicators-container .icon.active {
+    fill: var(--fem-accent-pink);
+    stroke: var(--fem-accent-pink);
+    border-color: var(--fem-accent-pink);
+    box-shadow: 0 0 12px rgba(255, 105, 180, 0.7);
+}
+
+/* Turn Indicator Icons - positioned at the ends */
+.horizontal-indicators-container #left-indicator-icon {
+    order: 1;
+}
+
+.horizontal-indicators-container #right-indicator-icon {
+    order: 5;
+}
+
+/* Middle icons */
+.horizontal-indicators-container #engine-icon {
+    order: 2;
+}
+
+.horizontal-indicators-container #headlights-icon {
+    order: 3;
+}
+
+.horizontal-indicators-container #seatbelt-icon {
+    order: 4;
+}
+
+/* Specific icon states */
+.horizontal-indicators-container #headlights-icon.low-beam {
+    fill: var(--fem-accent-lavender);
+    stroke: var(--fem-accent-lavender);
+    border-color: var(--fem-accent-lavender);
+    box-shadow: 0 0 12px rgba(221, 160, 221, 0.7);
+}
+
+.horizontal-indicators-container #headlights-icon.high-beam {
+    fill: #ba55d3; /* Medium Orchid */
+    stroke: #ba55d3;
+    border-color: #ba55d3;
+    box-shadow: 0 0 12px rgba(186, 85, 211, 0.7);
+}
+
+.horizontal-indicators-container #seatbelt-icon.active {
+    fill: var(--fem-heart-icon);
+    stroke: var(--fem-heart-icon);
+    border-color: var(--fem-heart-icon);
+    box-shadow: 0 0 12px rgba(255, 107, 157, 0.7);
+}
+
+.horizontal-indicators-container #engine-icon.active {
+    fill: var(--fem-accent-pink);
+    stroke: var(--fem-accent-pink);
+    border-color: var(--fem-accent-pink);
+    box-shadow: 0 0 12px rgba(255, 105, 180, 0.7);
+}
+
+.horizontal-indicators-container .indicator-icon.active {
+    fill: var(--fem-accent-rose);
+    stroke: var(--fem-accent-rose);
+    border-color: var(--fem-accent-rose);
+    background: rgba(255, 182, 193, 0.2);
+    box-shadow: 0 0 15px var(--fem-accent-rose), 0 0 30px rgba(255, 182, 193, 0.5);
+}
+
+/* Gear Container - Separate and Rounded */
+.gear-container-wrapper {
+    position: fixed;
+    bottom: 175px;
+    right: 10px;
+    z-index: 22000;
+}
+
+/* Health Container - Separate and Rounded */
+.health-container-wrapper {
+    position: fixed;
+    bottom: 115px;
+    right: 10px;
+    z-index: 22000;
+}
+
+/* Gear Stat Bar - Rounded */
+.gear-stat-bar {
+    width: 80px;
+    height: 45px;
+    background-color: var(--fem-panel);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-radius: 15px;
+    border: 2px solid var(--fem-grid);
+    box-shadow: inset 0 0 10px rgba(221, 160, 221, 0.3);
+}
+
+/* Health Stat Bar - Rounded */
+.health-stat-bar {
+    width: 80px;
+    height: 50px;
+    background-color: var(--fem-panel);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-radius: 15px;
+    border: 2px solid var(--fem-grid);
+    box-shadow: inset 0 0 10px rgba(221, 160, 221, 0.3);
+}
+
+/* Gear Label and Value Styles */
+.gear-stat-bar .gear-label {
+    font-family: var(--font-fem-secondary);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    font-weight: 600;
+    color: var(--fem-text-secondary);
+}
+
+.gear-stat-bar .gear-value {
+    font-family: var(--font-fem-primary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--fem-accent-pink);
+    text-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
+}
+
+/* Fuel Label and Value Styles */
+.health-stat-bar .health-label {
+    font-family: var(--font-fem-secondary);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    font-weight: 600;
+    color: var(--fem-text-secondary);
+}
+
+.health-stat-bar .health-value {
+    font-family: var(--font-fem-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--fem-accent-pink);
+    text-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
+}
+
+/* Radio Container */
+.radio-container {
+    position: absolute;
+    bottom: 325px;
+    right: 10px;
+    width: 280px;
+    height: 120px;
+    background-color: var(--fem-panel);
+    border-radius: 12px;
+    border: 2px solid var(--fem-grid);
+    box-shadow: inset 0 0 8px rgba(221, 160, 221, 0.3);
+    z-index: 25000;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.radio-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.radio-title {
+    font-family: var(--font-fem-primary);
+    font-size: 0.7rem;
+    color: var(--fem-accent-pink);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.radio-station-name {
+    font-family: var(--font-fem-secondary);
+    font-size: 0.6rem;
+    color: var(--fem-text-secondary);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    height: 14px;
+}
+
+.radio-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+.station-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-button, .play-pause-button {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--fem-accent-pink);
+    border-radius: 50%;
+    color: var(--fem-text-primary);
+    font-family: var(--font-fem-primary);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    outline: none;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.nav-button:hover, .play-pause-button:hover {
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 8px rgba(255, 105, 180, 0.7);
+    transform: scale(1.05);
+}
+
+.play-pause-button {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+}
+
+.nav-button:active, .play-pause-button:active {
+    transform: scale(0.95);
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.volume-label {
+    font-family: var(--font-fem-secondary);
+    font-size: 0.6rem;
+    color: var(--fem-text-secondary);
+    min-width: 40px;
+}
+
+.volume-slider {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--fem-accent-pink);
+    cursor: pointer;
+    box-shadow: 0 0 3px rgba(255, 105, 180, 0.7);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--fem-accent-pink);
+    cursor: pointer;
+    box-shadow: 0 0 3px rgba(255, 105, 180, 0.7);
+    border: none;
+}
+
+.radio-status {
+    font-family: var(--font-fem-secondary);
+    font-size: 0.55rem;
+    color: var(--fem-accent-pink);
+    text-align: center;
+    padding: 2px;
+    border: 1px solid var(--fem-accent-pink);
+    border-radius: 2px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Radio Info Box */
+.radio-info-box {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    background-color: rgba(255, 105, 180, 0.2);
+    border: 1px solid var(--fem-accent-pink);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 25001;
+    animation: pulse 2s infinite;
+}
+
+.info-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-text {
+    font-family: var(--font-fem-secondary);
+    font-size: 0.7rem;
+    color: var(--fem-accent-pink);
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255, 105, 180, 0.7);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(255, 105, 180, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 105, 180, 0);
+    }
+}
+
+/* RPM Gauge Container */
+.rpm-gauge-container {
+    position: fixed;
+    bottom: 225px;
+    right: 260px;
+    z-index: 21000;
+}
+
+/* RPM Gauge - Rounded */
+.rpm-gauge {
+    position: relative;
+    width: 120px;
+    height: 50px;
+    background-color: var(--fem-panel);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 2px solid var(--fem-grid);
+    box-shadow: inset 0 0 10px rgba(221, 160, 221, 0.3);
+}
+
+/* RPM Center Display */
+.rpm-center {
+    z-index: 5;
+    text-align: center;
+}
+
+.rpm-display {
+    font-family: var(--font-fem-primary);
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--fem-accent-pink);
+    line-height: 1;
+    margin-bottom: 2px;
+    text-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
+}
+
+.rpm-unit {
+    font-family: var(--font-fem-secondary);
+    font-size: 0.6rem;
+    color: var(--fem-text-secondary);
+}
+
+/* New RPM Bar System - Horizontal and Rounded */
+.rpm-bar-new {
+    position: fixed;
+    right: 10px;
+    bottom: 225px;
+    width: 240px;
+    height: 50px;
+    background-color: var(--fem-panel);
+    border-radius: 15px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--fem-grid);
+    box-shadow: inset 0 0 10px rgba(221, 160, 221, 0.3);
+    overflow: hidden;
+}
+
+.rpm-bar-fill {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--fem-accent-pink), var(--fem-accent-rose));
+    transition: width 0.2s ease;
+    width: 0%;
+    border-radius: 13px;
+}
+
+/* Update RPM bar colors based on level (handled by JS) */
+.rpm-bar-fill.warning {
+    background: repeating-linear-gradient(
+        90deg,
+        var(--fem-accent-lavender) 0px,
+        var(--fem-accent-lavender) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+}
+
+.rpm-bar-fill.danger {
+    background: repeating-linear-gradient(
+        90deg,
+        var(--fem-heart-icon) 0px,
+        var(--fem-heart-icon) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+}
+
+.rpm-bar-label {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--fem-text-secondary);
+    font-family: var(--font-fem-secondary);
+    font-size: 0.7rem;
+    font-weight: bold;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Fuel Gauge Container */
+.fuel-gauge-container {
+    position: fixed;
+    bottom: 60px;
+    right: 10px;
+    z-index: 21000;
+}
+
+/* Fuel Gauge - Rounded */
+.fuel-gauge {
+    position: relative;
+    width: 80px;
+    height: 45px;
+    background-color: var(--fem-panel);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 2px solid var(--fem-grid);
+    box-shadow: inset 0 0 10px rgba(221, 160, 221, 0.3);
+}
+
+/* Fuel Center Display */
+.fuel-center {
+    z-index: 5;
+    text-align: center;
+}
+
+.fuel-display {
+    font-family: var(--font-fem-primary);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--fem-accent-pink);
+    text-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
+    line-height: 1;
+}
+
+.fuel-label {
+    font-family: var(--font-fem-secondary);
+    font-size: 0.4rem;
+    color: var(--fem-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Health Bar Styles */
+.health-bar-background {
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    right: 2px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+}
+
+.health-bar-foreground {
+    height: 100%;
+    width: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    background-color: var(--fem-accent-pink);
+}
+
+/* Update health bar color based on level (handled by JS) */
+.health-bar-foreground.warning {
+    background-color: var(--fem-accent-lavender);
+}
+
+.health-bar-foreground.danger {
+    background-color: var(--fem-heart-icon);
+}
+
+/* Component Loading States */
+.dashboard-container {
+    animation: fadeInScale 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+               borderGlow 1s ease-in-out 0.8s forwards;
+}
+
+.speedometer-container {
+    animation: gaugeSlideIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards;
+    opacity: 0;
+}
+
+.speed-display {
+    animation: textTypewriter 0.4s ease-out 1.0s forwards;
+    opacity: 0;
+}
+
+.speed-unit {
+    animation: textTypewriter 0.4s ease-out 1.2s forwards;
+    opacity: 0;
+}
+
+.icon:not(.indicator-icon) {
+    animation: iconPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+}
+
+.icon:not(.indicator-icon):nth-child(1) { animation-delay: 1.6s; }
+.icon:not(.indicator-icon):nth-child(2) { animation-delay: 1.7s; }
+.icon:not(.indicator-icon):nth-child(3) { animation-delay: 1.8s; }
+.icon:not(.indicator-icon):nth-child(4) { animation-delay: 1.9s; }
+.icon:not(.indicator-icon):nth-child(5) { animation-delay: 2.0s; }
+
+/* Indicator icons without entrance animation */
+.indicator-icon {
+    opacity: 1;
+}
+
+.gear-container-wrapper {
+    animation: slideInFromBottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s forwards;
+    opacity: 0;
+}
+
+.health-container-wrapper {
+    animation: slideInFromBottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s forwards;
+    opacity: 0;
+}
+
+.stat-bar {
+    opacity: 0;
+    animation: slideInFromBottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.stat-bar:nth-child(1) {
+    animation-delay: 0.8s;
+}
+
+.stat-bar:nth-child(2) {
+    animation-delay: 1.0s;
+}
+
+.stat-bar:nth-child(3) {
+    animation-delay: 1.2s;
+}
+
+/* Add loading state for stat values */
+.stat-value {
+    animation: textTypewriter 0.3s ease-out forwards;
+    opacity: 0;
+}
+
+.stat-bar:nth-child(1) .stat-value {
+    animation-delay: 1.0s;
+}
+
+.stat-bar:nth-child(2) .stat-value {
+    animation-delay: 1.2s;
+}
+
+.stat-bar:nth-child(3) .stat-value {
+    animation-delay: 1.4s;
+}
+
+.stat-label {
+    animation: textTypewriter 0.3s ease-out forwards;
+    opacity: 0;
+}
+
+.stat-bar:nth-child(1) .stat-label {
+    animation-delay: 0.9s;
+}
+
+.stat-bar:nth-child(2) .stat-label {
+    animation-delay: 1.1s;
+}
+
+.stat-bar:nth-child(3) .stat-label {
+    animation-delay: 1.3s;
+}
+
+/* Gauge Animations */
+.rpm-gauge-container {
+    animation: gaugeSlideIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s forwards;
+    opacity: 0;
+}
+
+.rpm-bar-new {
+    animation: rpmBarLoad 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s forwards;
+    opacity: 0;
+}
+
+.fuel-gauge-container {
+    animation: gaugeSlideIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.8s forwards;
+    opacity: 0;
+}
+
+.horizontal-indicators-container {
+    animation: slideInFromRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.8s forwards;
+    opacity: 0;
+}
+
+.horizontal-indicators-container .icon {
+    animation: iconPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+}
+
+.horizontal-indicators-container .icon:nth-child(1) { animation-delay: 1.2s; }
+.horizontal-indicators-container .icon:nth-child(2) { animation-delay: 1.3s; }
+.horizontal-indicators-container .icon:nth-child(3) { animation-delay: 1.4s; }
+.horizontal-indicators-container .icon:nth-child(4) { animation-delay: 1.5s; }
+.horizontal-indicators-container .icon:nth-child(5) { animation-delay: 1.6s; }
+
+/* Animations */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(50px);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInFromRight {
+    0% {
+        opacity: 0;
+        transform: translateX(100px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes slideInFromLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-100px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes slideInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes gaugeSlideIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(10deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes rpmBarLoad {
+    0% {
+        opacity: 0;
+        transform: translateX(50px) scaleY(0.3);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scaleY(1);
+    }
+}
+
+@keyframes iconPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(180deg);
+    }
+    70% {
+        transform: scale(1.2) rotate(-10deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes textTypewriter {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+<style>
+/* vietnamese */
+@font-face {
+  font-family: 'Dancing Script';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/dancingscript/v29/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7B1i03Rep8ltA.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Dancing Script';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/dancingscript/v29/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7B1i03ROp8ltA.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Dancing Script';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/dancingscript/v29/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7B1i03Sup8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/quicksand/v37/6xKtdSZaM9iE8KbpRA_hJFQNcOM.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/quicksand/v37/6xKtdSZaM9iE8KbpRA_hJVQNcOM.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/quicksand/v37/6xKtdSZaM9iE8KbpRA_hK1QN.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/quicksand/v37/6xKtdSZaM9iE8KbpRA_hJFQNcOM.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/quicksand/v37/6xKtdSZaM9iE8KbpRA_hJVQNcOM.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/quicksand/v37/6xKtdSZaM9iE8KbpRA_hK1QN.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+</style>
+<style>
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459W1hyzbi.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459WZhyzbi.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459Wdhyzbi.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459W1hyzbi.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459WZhyzbi.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459Wdhyzbi.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3GUBGEe.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3iUBGEe.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3CUBGEe.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3-UBGEe.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* math */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMawCUBGEe.woff2) format('woff2');
+  unicode-range: U+0302-0303, U+0305, U+0307-0308, U+0310, U+0312, U+0315, U+031A, U+0326-0327, U+032C, U+032F-0330, U+0332-0333, U+0338, U+033A, U+0346, U+034D, U+0391-03A1, U+03A3-03A9, U+03B1-03C9, U+03D1, U+03D5-03D6, U+03F0-03F1, U+03F4-03F5, U+2016-2017, U+2034-2038, U+203C, U+2040, U+2043, U+2047, U+2050, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20D0-20DC, U+20E1, U+20E5-20EF, U+2100-2112, U+2114-2115, U+2117-2121, U+2123-214F, U+2190, U+2192, U+2194-21AE, U+21B0-21E5, U+21F1-21F2, U+21F4-2211, U+2213-2214, U+2216-22FF, U+2308-230B, U+2310, U+2319, U+231C-2321, U+2336-237A, U+237C, U+2395, U+239B-23B7, U+23D0, U+23DC-23E1, U+2474-2475, U+25AF, U+25B3, U+25B7, U+25BD, U+25C1, U+25CA, U+25CC, U+25FB, U+266D-266F, U+27C0-27FF, U+2900-2AFF, U+2B0E-2B11, U+2B30-2B4C, U+2BFE, U+3030, U+FF5B, U+FF5D, U+1D400-1D7FF, U+1EE00-1EEFF;
+}
+/* symbols */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMaxKUBGEe.woff2) format('woff2');
+  unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AD, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F7FF, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FA89, U+1FA8F-1FAC6, U+1FACE-1FADC, U+1FADF-1FAE9, U+1FAF0-1FAF8, U+1FB00-1FBFF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3OUBGEe.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3KUBGEe.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3GUBGEe.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3iUBGEe.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3CUBGEe.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3-UBGEe.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* math */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMawCUBGEe.woff2) format('woff2');
+  unicode-range: U+0302-0303, U+0305, U+0307-0308, U+0310, U+0312, U+0315, U+031A, U+0326-0327, U+032C, U+032F-0330, U+0332-0333, U+0338, U+033A, U+0346, U+034D, U+0391-03A1, U+03A3-03A9, U+03B1-03C9, U+03D1, U+03D5-03D6, U+03F0-03F1, U+03F4-03F5, U+2016-2017, U+2034-2038, U+203C, U+2040, U+2043, U+2047, U+2050, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20D0-20DC, U+20E1, U+20E5-20EF, U+2100-2112, U+2114-2115, U+2117-2121, U+2123-214F, U+2190, U+2192, U+2194-21AE, U+21B0-21E5, U+21F1-21F2, U+21F4-2211, U+2213-2214, U+2216-22FF, U+2308-230B, U+2310, U+2319, U+231C-2321, U+2336-237A, U+237C, U+2395, U+239B-23B7, U+23D0, U+23DC-23E1, U+2474-2475, U+25AF, U+25B3, U+25B7, U+25BD, U+25C1, U+25CA, U+25CC, U+25FB, U+266D-266F, U+27C0-27FF, U+2900-2AFF, U+2B0E-2B11, U+2B30-2B4C, U+2BFE, U+3030, U+FF5B, U+FF5D, U+1D400-1D7FF, U+1EE00-1EEFF;
+}
+/* symbols */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMaxKUBGEe.woff2) format('woff2');
+  unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AD, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F7FF, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FA89, U+1FA8F-1FAC6, U+1FACE-1FADC, U+1FADF-1FAE9, U+1FAF0-1FAF8, U+1FB00-1FBFF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3OUBGEe.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3KUBGEe.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3GUBGEe.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3iUBGEe.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3CUBGEe.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3-UBGEe.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* math */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMawCUBGEe.woff2) format('woff2');
+  unicode-range: U+0302-0303, U+0305, U+0307-0308, U+0310, U+0312, U+0315, U+031A, U+0326-0327, U+032C, U+032F-0330, U+0332-0333, U+0338, U+033A, U+0346, U+034D, U+0391-03A1, U+03A3-03A9, U+03B1-03C9, U+03D1, U+03D5-03D6, U+03F0-03F1, U+03F4-03F5, U+2016-2017, U+2034-2038, U+203C, U+2040, U+2043, U+2047, U+2050, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20D0-20DC, U+20E1, U+20E5-20EF, U+2100-2112, U+2114-2115, U+2117-2121, U+2123-214F, U+2190, U+2192, U+2194-21AE, U+21B0-21E5, U+21F1-21F2, U+21F4-2211, U+2213-2214, U+2216-22FF, U+2308-230B, U+2310, U+2319, U+231C-2321, U+2336-237A, U+237C, U+2395, U+239B-23B7, U+23D0, U+23DC-23E1, U+2474-2475, U+25AF, U+25B3, U+25B7, U+25BD, U+25C1, U+25CA, U+25CC, U+25FB, U+266D-266F, U+27C0-27FF, U+2900-2AFF, U+2B0E-2B11, U+2B30-2B4C, U+2BFE, U+3030, U+FF5B, U+FF5D, U+1D400-1D7FF, U+1EE00-1EEFF;
+}
+/* symbols */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMaxKUBGEe.woff2) format('woff2');
+  unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AD, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F7FF, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FA89, U+1FA8F-1FAC6, U+1FACE-1FADC, U+1FADF-1FAE9, U+1FAF0-1FAF8, U+1FB00-1FBFF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3OUBGEe.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3KUBGEe.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v49/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+</style>
+
+<style>
+/* Override: hide old radio panel if present */
+.radio-container { display: none !important; }
+/* New YouTube Radio panel positioning to match original location */
+.yt-radio-container {
+  position: absolute; bottom: 325px; right: 10px; width: 320px; min-height: 150px;
+  background-color: var(--fem-panel, #ffd6e7); border-radius: 12px; border: 2px solid var(--fem-grid, #e6bcde);
+  box-shadow: inset 0 0 8px rgba(221, 160, 221, 0.3); z-index: 26000; display: flex; flex-direction: column; padding: 10px;
+  font-family: var(--font-fem-secondary, sans-serif); color: var(--fem-text-secondary, #c71585);
+}
+.yt-radio-header { display:flex; flex-direction:column; align-items:center; gap:4px; margin-bottom:6px; }
+.yt-radio-title { font-family: var(--font-fem-primary, cursive); font-weight:700; font-size: 0.9rem; color: var(--fem-accent-pink, #ff69b4); }
+.yt-url-row { display:flex; gap:6px; }
+.yt-url-row input { flex:1; padding:6px 8px; border-radius: 8px; border:1px solid var(--fem-grid, #e6bcde); outline: none; }
+.yt-url-row button { padding:6px 10px; border-radius: 8px; border:1px solid var(--fem-accent-pink, #ff69b4); background: rgba(0,0,0,0.05); cursor:pointer; }
+.yt-controls { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; }
+.yt-controls .btn { border:1px solid var(--fem-accent-pink, #ff69b4); border-radius: 20px; padding:6px 10px; background: rgba(0,0,0,0.05); cursor:pointer; }
+.yt-volume { display:flex; align-items:center; gap:8px; flex:1; }
+.yt-volume input[type=range] { flex:1; height: 4px; -webkit-appearance:none; background: rgba(0,0,0,0.1); border-radius:2px; }
+.yt-status { text-align:center; font-size: 0.7rem; border:1px solid var(--fem-accent-pink, #ff69b4); border-radius: 6px; padding:4px; margin-top:6px;
+  color: var(--fem-accent-pink, #ff69b4);
+}
+/* Player box hidden by default (we can show a small thumb area) */
+#yt-player { width:100%; height:90px; border-radius:10px; overflow:hidden; background:#000; margin-top:8px; }
+</style>
+
+
+<style>
+.yt-hint { margin-top:6px; font-size:0.7rem; line-height:1.2; 
+  border:1px dashed rgba(199,21,133,.5); border-radius:8px; padding:6px;
+  color: var(--fem-text-secondary, #c71585);
+}
+.yt-hint code { background: rgba(0,0,0,0.06); padding:1px 4px; border-radius:4px; }
+.yt-row button { padding:4px 8px; border-radius: 8px; border:1px solid var(--fem-accent-pink, #ff69b4); background: rgba(0,0,0,0.05); cursor:pointer; font-size:12px; }
+</style>
+
+</head>
+<body>
+
+
+ <!-- Audio Elements -->
+    <audio id="engine-start-sound" preload="none">
+        <source src="engineon.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="engine-stop-sound" preload="none">
+        <source src="engineoff.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="indicator-sound" preload="none">
+        <source src="blinker.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="seatbelt-warning-sound" preload="none">
+        <source src="https://www.myinstants.com/media/sounds/kobo-jawa.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="alarm-sound" preload="auto" loop="">
+        <source src="#" type="audio/mpeg">
+    </audio>
+
+    <div class="dashboard-container">
+        <!-- Dashboard Loading Indicator -->
+        <div class="dashboard-loading" id="dashboard-loading" style="display: none;">
+            <div class="dashboard-spinner"></div>
+            <div class="dashboard-loading-text">SUCCESS</div>
+        </div>
+        <!-- Main Speedometer -->
+        <div class="speedometer-container">
+            <div class="speedometer">
+                <!-- Speed scale markings -->
+                <div class="speed-scale"></div>
+
+                <!-- Digital display in center -->
+                <div class="speed-center">
+                    <div id="speed-value" class="speed-display">000</div>
+                    <div id="speed-unit" class="speed-unit">km/h</div>
+                    <!--<div class="harmony-crews">CHARLOTTE<br>MIDDLETON</div>-->
+                </div>
+            </div>
+        </div>
+        <!-- Horizontal Indicators Container -->
+        <div class="horizontal-indicators-container">
+            <!-- Left Turn Indicator Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon indicator-icon" id="left-indicator-icon" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
+            </svg>
+
+            <!-- Engine Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" id="engine-icon" viewBox="0 0 24 24">
+                <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path stroke-dasharray="48" stroke-dashoffset="48" d="M11 9h6v10h-6.5l-2 -2h-2.5v-6.5l1.5 -1.5Z">
+                        <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="48;0"></animate>
+                    </path>
+                    <path fill-opacity="0" d="M17 13h0v-3h0v8h0v-3h0z" opacity="0">
+                        <animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M17 13h0v-3h0v8h0v-3h0z;M17 13h4v-3h1v8h-1v-3h-4z"></animate>
+                        <set fill="freeze" attributeName="fill-opacity" begin="0.8s" to="1"></set>
+                        <set fill="freeze" attributeName="opacity" begin="0.6s" to="1"></set>
+                    </path>
+                    <path d="M6 14h0M6 11v6" opacity="0">
+                        <animate fill="freeze" attributeName="d" begin="0.8s" dur="0.2s" values="M6 14h0M6 11v6;M6 14h-4M2 11v6"></animate>
+                        <set fill="freeze" attributeName="opacity" begin="0.8s" to="1"></set>
+                    </path>
+                    <path d="M11 9v0M8 9h6" opacity="0">
+                        <animate fill="freeze" attributeName="d" begin="1s" dur="0.2s" values="M11 9v0M8 9h6;M11 9v-4M8 5h6"></animate>
+                        <set fill="freeze" attributeName="opacity" begin="1s" to="1"></set>
+                    </path>
+                </g>
+            </svg>
+
+            <!-- Headlights Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" id="headlights-icon" viewBox="0 0 2048 2048"><path d="M960 512q93 0 174 35t142 96t96 142t36 175q0 93-35 174t-96 142t-142 96t-175 36q-93 0-174-35t-142-96t-96-142t-36-175q0-93 35-174t96-142t142-96t175-36zm0 768q66 0 124-25t101-69t69-102t26-124q0-66-25-124t-69-101t-102-69t-124-26q-35 0-64 7v626q29 7 64 7zm64-896H896V0h128v384zM896 1536h128v384H896v-384zm1024-640v128h-384V896h384zM384 1024H0V896h384v128zm123-426L236 326l90-90l272 271l-91 91zm906 724l271 272l-90 90l-272-271l91-91zm0-724l-91-91l272-271l90 90l-271 272zm-906 724l91 91l-272 271l-90-90l271-272z"></path></svg>
+
+            <!-- Seatbelt Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" id="seatbelt-icon" viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 1.11-.89 2-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m.39 12.79a34 34 0 0 1 4.25.25c.06-2.72-.18-5.12-.64-6.04c-.13-.27-.31-.5-.5-.7l-8.07 6.92c1.36-.22 3.07-.43 4.96-.43M7.46 17c.13 1.74.39 3.5.81 5h2.07c-.29-.88-.5-1.91-.66-3c0 0 2.32-.44 4.64 0c-.16 1.09-.37 2.12-.66 3h2.07c.44-1.55.7-3.39.83-5.21a34.58 34.58 0 0 0-4.17-.25c-1.93 0-3.61.21-4.93.46M12 7S9 7 8 9c-.34.68-.56 2.15-.63 3.96l6.55-5.62C12.93 7 12 7 12 7m6.57-1.33l-1.14-1.33l-3.51 3.01c.55.19 1.13.49 1.58.95l3.07-2.63m2.1 10.16c-.09-.03-1.53-.5-4.03-.79c-.01.57-.04 1.16-.08 1.75c2.25.28 3.54.71 3.56.71l.55-1.67m-13.3-2.87l-3.94 3.38l.89 1.48c.02-.01 1.18-.46 3.14-.82c-.11-1.41-.14-2.8-.09-4.04Z"></path></svg>
+
+            <!-- Right Turn Indicator Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon indicator-icon" id="right-indicator-icon" viewBox="0 0 24 24">
+                <path d="M4 11v2h12.17l-5.59 5.59L12 20l8-8-8-8-1.41 1.41L16.17 11H4z"></path>
+            </svg>
+        </div>
+        <!-- RPM Gauge -->
+        <div class="rpm-gauge-container">
+            <div class="rpm-gauge">
+                <!-- Digital display in center -->
+                <div class="rpm-center">
+                    <div id="rpm-value" class="rpm-display">0000</div>
+                    <div id="rpm-unit" class="rpm-unit">RPM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New RPM Horizontal Bar -->
+        <div id="rpm-bar-new" class="rpm-bar-new">
+            <div id="rpm-bar-fill" class="rpm-bar-fill" style="width: 0%;"></div>
+            <div class="rpm-bar-label">RPM</div>
+        </div>
+
+        <!-- Gear Container -->
+        <div class="gear-container-wrapper">
+            <div class="gear-stat-bar">
+                <div class="gear-label">
+                    <span>GEAR</span>
+                </div>
+                <div id="gear-value" class="gear-value">N</div>
+            </div>
+        </div>
+
+        <!-- Health Container -->
+        <div class="health-container-wrapper">
+            <div class="health-stat-bar">
+                <div class="health-label">
+                    <span>HEALTH</span>
+                </div>
+                <div id="health-value" class="health-value">100%</div>
+                <div class="health-bar-background">
+                <div id="health-bar" class="health-bar-foreground"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fuel Gauge -->
+        <div class="fuel-gauge-container">
+            <div class="fuel-gauge">
+                <!-- Digital display in center -->
+                <div class="fuel-center">
+                    <div id="fuel-value" class="fuel-display">100</div>
+                    <div class="fuel-label">FUEL<br>LEVEL</div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+        
+
+        <!-- Custom Internet Radio -->
+        <div class="radio-container">
+            <div class="radio-header">
+                <div class="radio-title">INTERNET RADIO</div>
+                <div class="radio-station-name" id="station-name">SELECT STATION</div>
+            </div>
+            <div class="radio-controls">
+                <div class="station-navigation">
+                    <button id="prev-station" class="nav-button">◀</button>
+                    <button id="play-pause" class="play-pause-button">▶</button>
+                    <button id="next-station" class="nav-button">▶</button>
+                </div>
+                <div class="volume-control">
+                    <label for="volume-slider" class="volume-label">VOL</label>
+                    <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="50">
+                </div>
+                <div class="radio-status" id="radio-status">READY ((PRESS F2 TO INTERACT))</div>
+            </div>
+            <!-- Hidden audio element for radio -->
+            <audio id="radio-audio" preload="none"></audio>
+        </div>
+
+    
+
+    <script src="scripts.js.download"></script>
+
+
+<div id="flonnect-my-app"></div>
+<div class="yt-radio-container" id="yt-radio">
+  <div class="yt-radio-header">
+    <div class="yt-radio-title">INTERNET RADIO · YouTube</div>
+    <div class="yt-url-row">
+      <input type="text" id="yt-url" placeholder="Paste YouTube URL (video/live)..." />
+      <button id="yt-load">Load</button>
+    </div>
+  </div>
+  <div class="yt-controls"><button class="btn" 
+    <button class="btn" id="yt-play">Play</button>
+    <button class="btn" id="yt-pause">Pause</button>
+    <div class="yt-volume">
+      <span style="font-size:0.8rem;">VOL</span>
+      <input type="range" id="yt-volume" min="0" max="100" value="50" />
+    </div>
+  </div>
+  <div class="yt-status" id="yt-status">Idle · <span id="yt-time">0:00</span></div>
+<div class="yt-hint" id="yt-hint" style="display:none;"></div>
+
+  <div id="yt-player"></div>
+</div>
+
+
+
+
+
+
+<script>
+(function(){
+  // --- Robust YouTube IFrame API loader with status messages ---
+  var apiRequested = false, apiReady = false, playerReady = false;
+  var pendingVideoId = null;
+  var player = null;
+
+  function $(id){ return document.getElementById(id); }
+  var statusEl = document.getElementById("yt-status") || document.getElementById("radioStatus") || document.getElementById("radio-status");
+  var volEl = $("yt-volume");
+  var urlEl = $("yt-url");
+  var timeEl = $("yt-time");
+
+  function setStatus(msg){
+    if (statusEl) statusEl.textContent = msg;
+  }
+
+  function injectAPI(){
+    if (apiRequested) return;
+    apiRequested = true;
+    setStatus("Loading YouTube API…");
+    var s = document.createElement("script");
+    s.src = "https://www.youtube.com/iframe_api";
+    s.async = true;
+    s.onerror = function(){ setStatus("Failed to load YouTube API (network/CSP)."); };
+    document.head.appendChild(s);
+  }
+
+  // Called by YT API
+  window.onYouTubeIframeAPIReady = function(){
+    apiReady = true;
+    setStatus("YouTube API Ready — paste URL and Load.");
+    if (pendingVideoId) ensurePlayer(pendingVideoId);
+  };
+
+  // Fallback poll in case some environments don't trigger the callback
+  var pollTimer = setInterval(function(){
+    if (apiReady) { clearInterval(pollTimer); return; }
+    if (window.YT && window.YT.Player) {
+      apiReady = true;
+      setStatus("YouTube API Ready — paste URL and Load.");
+      if (pendingVideoId) ensurePlayer(pendingVideoId);
+      clearInterval(pollTimer);
+    }
+  }, 400);
+
+  function parseYouTubeId(url){
+    if (!url) return null;
+    var patterns = [
+      /(?:v=|vi=)([A-Za-z0-9_-]{11})/,
+      /youtu\.be\/([A-Za-z0-9_-]{11})/,
+      /youtube\.com\/live\/([A-Za-z0-9_-]{11})/,
+      /youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/
+    ];
+    for (var i=0;i<patterns.length;i++){
+      var m = url.match(patterns[i]);
+      if (m && m[1]) return m[1];
+    }
+    var m2 = url.match(/([A-Za-z0-9_-]{11})/);
+    return m2 ? m2[1] : null;
+  }
+
+  function ensurePlayer(videoId){
+    if (!videoId){
+      setStatus("Invalid URL — cannot find video ID.");
+      return;
+    }
+    if (!apiReady){
+      pendingVideoId = videoId;
+      injectAPI();
+      setStatus("Waiting for API… then loading video.");
+      return;
+    }
+    if (player){
+      try {
+        player.loadVideoById(videoId);
+        setStatus("Loaded: " + videoId);
+      } catch(e){
+        setStatus("Load error. Recreating player…");
+        try { player.destroy(); } catch(_){}
+        player = null;
+        createPlayer(videoId);
+      }
+      return;
+    }
+    createPlayer(videoId);
+  }
+
+  function createPlayer(videoId){
+    setStatus("Creating player…");
+    player = new YT.Player('yt-player', {
+      host: 'https://www.youtube.com',
+      videoId: videoId,
+      playerVars: {
+        autoplay: 0,
+        controls: 1,
+        rel: 0,
+        playsinline: 1,
+        origin: window.location.origin,
+        enablejsapi: 1
+      },
+      events: {
+        onReady: function(){
+          playerReady = true;
+          try {
+            var ifr = document.querySelector('#yt-player iframe');
+            if (ifr) {
+              ifr.setAttribute('allow','autoplay; encrypted-media; picture-in-picture; fullscreen');
+              ifr.style.width='100%'; ifr.style.height='100%';
+            }
+          } catch(e){}
+          try {
+            var iv = parseInt((volEl && volEl.value) || "50", 10);
+            if (isNaN(iv)) iv = 50;
+            iv = Math.max(0, Math.min(100, iv));
+            player.setVolume(iv);
+            if (iv>0) try{player.unMute();}catch(e){}
+          } catch(e){}
+          setStatus("Ready — press Play.");
+          if (window.__ytTicker) clearInterval(window.__ytTicker);
+          window.__ytTicker = setInterval(function(){
+            try {
+              if (!player || !timeEl) return;
+              var t = Math.floor(player.getCurrentTime() || 0);
+              var mm = String(Math.floor(t/60));
+              var ss = String(t%60).padStart(2,'0');
+              timeEl.textContent = mm+':'+ss;
+            } catch(e){}
+          }, 500);
+        },
+        onStateChange: function(e){
+          var map = { "-1":"Unstarted", "0":"Ended", "1":"Playing", "2":"Paused", "3":"Buffering", "5":"Cued" };
+          setStatus(map[String(e.data)] || ("State: " + e.data));
+        },
+        onError: function(e){
+          var code = String(e && e.data);
+          var msg = "Error: " + code;
+          if (code === '101' || code === '150') {
+            msg += " — video tidak mengizinkan embed di luar YouTube.";
+          } else if (code === '2') {
+            msg += " — URL/ID tidak valid.";
+          } else if (code === '5') {
+            msg += " — masalah HTML5 player, coba refresh/browser lain.";
+          }
+          setStatus(msg);
+        }
+      }
+    });
+  }
+
+  // Wire UI
+  var loadBtn = document.getElementById("yt-load");
+  var playBtn = document.getElementById("yt-play");
+  var pauseBtn = document.getElementById("yt-pause");
+  if (loadBtn) loadBtn.addEventListener("click", function(){
+    var id = parseYouTubeId((urlEl && urlEl.value || "").trim());
+    if (!apiRequested) injectAPI();
+    ensurePlayer(id);
+  });
+  if (playBtn) playBtn.addEventListener("click", function(){ try { player && player.playVideo(); } catch(e){} });
+  if (pauseBtn) pauseBtn.addEventListener("click", function(){ try { player && player.pauseVideo(); } catch(e){} });
+  if (volEl) volEl.addEventListener("input", function(){
+    try {
+      if (!player) return;
+      var v = parseInt(volEl.value, 10); if (isNaN(v)) v = 0;
+      v = Math.max(0, Math.min(100, v));
+      player.setVolume(v);
+      if (v === 0) { try { player.mute(); } catch(e){} } else { try { player.unMute(); } catch(e){} }
+    } catch(e){}
+  });
+
+  // Auto-init API so user doesn't have to click first
+  injectAPI();
+})();
+</script>
+
+</body></html>

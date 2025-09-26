@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Tesla 300x500 Orange Neon with Logo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --text: #fff8f0;
+  --muted:#ffcba4;
+  --accent:#ff9933;
+  --accent2:#ffcc66;
+  --tesla-panel:#1a0f00;
+  --tesla-panel2:#261300;
+  --tesla-stroke:rgba(255,150,50,.4);
+  --tesla-glass:rgba(255,120,0,.15);
+ --media-height:200px; }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+
+.dashboard-container{
+  position:fixed; right:10px; bottom:35px;
+  width:300px; height:auto;
+  display:grid; grid-template-rows: 1fr auto; gap:8px;
+  pointer-events:none; overflow:visible;
+}
+.card{ min-height: 260px; 
+  pointer-events:auto;
+  background:linear-gradient(180deg,var(--tesla-panel),var(--tesla-panel2));
+  border:1px solid var(--tesla-stroke);
+  border-radius:14px;
+  opacity:0.85;
+  box-shadow:0 0 12px rgba(255,140,0,.6),0 0 24px rgba(255,165,0,.4);
+  overflow:hidden;
+}
+.card .inner{padding:8px 10px 14px 10px; display:flex; flex-direction:column; gap:6px}
+
+.speed-row{display:grid; grid-template-columns:auto 1fr auto; align-items:end; gap:8px}
+#speed-value{ font-family:Orbitron,Inter,sans-serif; font-size:36px; font-weight:800; line-height:1;
+  background:linear-gradient(180deg,#ffe0b3,#ff9933 55%,#ff6600);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 12px rgba(255,160,60,.8),0 0 24px rgba(255,140,0,.6);
+}
+#speed-unit{ font-size:10px; color:var(--muted); letter-spacing:.16em; text-transform:uppercase; font-weight:700 }
+
+.stats-row{ display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:stretch }
+.gear-stat-bar,.fuel-gauge{ background:var(--tesla-glass); border:1px solid var(--tesla-stroke); border-radius:10px; padding:8px 10px; min-height:44px; display:flex; align-items:center; justify-content:space-between; overflow:visible }
+.gear-label span,.fuel-label{ font-size:12px; color:#ffdeb3; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap }
+#gear-value,.fuel-display{ font-family:Orbitron; font-size:18px; line-height:1.2; font-weight:800; color:#fff2e6 }
+
+.health-stat-bar{ background:var(--tesla-glass); border:1px solid var(--tesla-stroke); border-radius:10px; padding:8px 10px; min-height:54px; display:flex; flex-direction:column; gap:6px; }
+.health-label span{ font-size:12px; color:#ffd6a8; letter-spacing:.08em; text-transform:uppercase }
+#health-value{ font-family:Orbitron; font-size:18px; font-weight:800; color:#fff2e6; line-height:1.2 }
+.health-bar-background{ height:6px; background:#0a1118; border:1px solid var(--tesla-stroke); border-radius:6px; overflow:hidden; width:100% }
+#health-bar{height:100%; width:100%; background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+.rpm-gauge{display:flex; align-items:center; gap:6px; margin-top:4px}
+#rpm-value{ font-family:Orbitron; font-size:16px; font-weight:800; color:#ffe5cc; text-shadow:0 0 8px rgba(255,140,0,.7)}
+#rpm-bar-new{ height:8px; background:#0a1118; border:1px solid var(--tesla-stroke); border-radius:6px; overflow:hidden; flex:1 }
+#rpm-bar-fill{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#ff9933,#ffcc66,#ffff99); box-shadow:0 0 6px rgba(255,180,0,.8) }
+
+.horizontal-indicators-container{ display:flex; gap:6px; flex-wrap:wrap; margin-top:4px }
+.icon{ width:22px;height:22px; display:flex; align-items:center; justify-content:center;
+       border-radius:8px; border:1px solid var(--tesla-stroke); background:var(--tesla-glass);
+       fill:#ffcc99; stroke:#ffcc99; box-shadow:0 0 4px rgba(255,150,50,.4)}
+.icon.active{ fill:#ff9933; stroke:#ff9933; box-shadow:0 0 10px rgba(255,140,0,.9),0 0 20px rgba(255,170,0,.6) }
+
+.brand-logo-wrap{ display:flex; align-items:center; justify-content:center; margin-bottom:6px }
+.brand-logo{ max-width:100%; max-height:36px; object-fit:contain; filter: drop-shadow(0 0 10px rgba(255,170,0,.35)); }
+
+.media-mini{ display:flex; gap:6px; align-items:center; margin-top:4px }
+.media-mini input{ flex:1; min-width:0; font-size:11px; padding:6px 8px; color:#fff8f0; background:#261300; border:1px solid var(--tesla-stroke); border-radius:8px; outline:none }
+.btn{ border:1px solid var(--tesla-stroke); background:var(--tesla-glass); color:#fff0e6; padding:6px 10px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:700; text-shadow:0 0 6px rgba(255,180,0,.8)}
+#yt-player{ width:100%; height: 112px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 0 12px rgba(255,120,0,.6)}
+.media-ctrl{ display:grid; grid-template-columns:auto auto 1fr; gap:6px; align-items:center }
+.vol{ display:flex; gap:6px; align-items:center }
+.vol input[type=range]{ width:100%; height:4px; -webkit-appearance:none; background:#1a2330; border-radius:3px; position:relative; z-index:1; pointer-events:auto }
+.vol input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:12px;height:12px;border-radius:50%; background:#ff9933; box-shadow:0 0 6px rgba(255,150,50,.9) }
+#yt-status{ grid-column:1 / -1; justify-self:start; font-size:10px; color:#ffcc99; opacity:.95; margin:2px 0 2px 0; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+
+/* Floating YouTube search panel */
+.search-float{ pointer-events:auto;
+  position:absolute;
+  top:0;
+  right: calc(300px + 12px);
+  width: 300px;
+  max-height: 100%;
+  display:flex; flex-direction:column;
+  background:linear-gradient(180deg,var(--tesla-panel),var(--tesla-panel2));
+  border:1px solid rgba(255,150,50,.45);
+  border-radius:12px;
+  box-shadow:0 0 18px rgba(255,140,0,.45), 0 8px 28px rgba(0,0,0,.35);
+  padding:8px;
+  opacity:.96; backdrop-filter: blur(2px);
+  z-index: 20;
+}
+.hidden{ display:none !important }
+.search-float .search-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px }
+.search-float .search-title{ font-weight:700; font-size:12px; letter-spacing:.06em; color:#ffd6a8 }
+.search-float .search-close{ border:1px solid rgba(255,150,50,.4); background:rgba(255,120,0,.12); color:#ffe6cc; border-radius:8px; padding:2px 8px; cursor:pointer }
+.search-float .search-list{ overflow:auto; flex:1; display:flex; flex-direction:column; gap:8px }
+.search-item{ display:flex; gap:8px; align-items:center; padding:6px; border:1px solid rgba(255,150,50,.25); border-radius:8px; background:rgba(255,120,0,.08); cursor:pointer }
+.search-item:hover{ background:rgba(255,160,0,.12) }
+.search-item.active{ border-color: rgba(255,200,120,.95); background: rgba(255,170,60,.18);
+  box-shadow: 0 0 10px rgba(255,160,60,.55), inset 0 0 0 1px rgba(255,220,160,.35); }
+.search-thumb{ width:64px; height:40px; background:#000; border-radius:6px; overflow:hidden; flex:0 0 auto }
+.search-thumb img{ width:100%; height:100%; object-fit:cover }
+.search-meta{ min-width:0 }
+.search-title-line{ font-size:11px; color:#fff2e6; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; }
+
+.fuel-center{ display:flex; align-items:center; gap:8px; white-space:nowrap }
+.health-head{ display:flex; align-items:center; justify-content:space-between; } .health-head .health-label{ font-size:12px; color:#ffd6a8; letter-spacing:.08em; text-transform:uppercase } .health-head #health-value{ font-family:Orbitron; font-size:18px; font-weight:800; color:#fff2e6; line-height:1.2 }
+.card + .card{ margin-top: 8px }
+</style>
+</head>
+<body>
+<div class="dashboard-container">
+  <div id="yt-search-float" class="search-float hidden">
+    <div class="search-head"><div class="search-title">Hasil Pencarian</div>
+      <button class="search-close" id="yt-search-close">×</button></div>
+    <div class="search-list" id="yt-search-list"></div>
+  </div>
+  <div class="speedometer-container card">
+    <div class="inner">
+      <div class="brand-logo-wrap"><img class="brand-logo" src="logo-agroventura.png" alt="Agro Ventura Corp. logo"></div>
+      <div class="speed-row">
+        <div class="unit">Speed</div>
+        <div id="speed-value">000</div>
+        <div id="speed-unit">km/h</div>
+      </div>
+
+      <div class="horizontal-indicators-container">
+        <svg id="left-indicator-icon" class="icon" viewBox="0 0 24 24"><path d="M14 7l-5 5 5 5V7z"/></svg>
+        <svg id="engine-icon" class="icon" viewBox="0 0 24 24"><path d="M3 10h2v4H3v-4zm18 0h-2v4h2v-4zM7 7h10v10H7V7z"/></svg>
+        <svg id="headlights-icon" class="icon" viewBox="0 0 24 24"><circle cx="8" cy="12" r="3"/><path d="M12 9h8M12 12h8M12 15h8"/></svg>
+        <svg id="seatbelt-icon" class="icon" viewBox="0 0 24 24"><path d="M5 7l14 10M19 7L5 17"/></svg>
+        <svg id="right-indicator-icon" class="icon" viewBox="0 0 24 24"><path d="M10 7l5 5-5 5V7z"/></svg>
+      </div>
+
+      <div class="rpm-gauge">
+        <div id="rpm-value">0000</div>
+        <div id="rpm-bar-new"><span id="rpm-bar-fill"></span></div>
+      </div>
+
+      <div class="stats-row">
+        <div class="gear-stat-bar">
+          <div class="gear-label"><span>GEAR</span></div>
+          <div id="gear-value">N</div>
+        </div>
+        <div class="fuel-gauge">
+          <div class="fuel-center">
+            <div id="fuel-value" class="fuel-display">100</div>
+            <div class="fuel-label">FUEL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="health-stat-bar">
+        <div class="health-label"><span>HEALTH</span></div>
+        <div id="health-value">100%</div>
+        <div class="health-bar-background"><div id="health-bar"></div></div>
+      </div>
+
+      </div>
+  </div>
+
+  <div class="media-card card">
+    <div class="inner">
+      <div class="media-mini">
+        <input id="yt-url" placeholder="Ketik kata kunci YouTube…">
+        <button class="btn" id="yt-load">Cari</button>
+      </div>
+      <div id="yt-player"></div>
+      <div class="media-ctrl">
+        <button class="btn" id="yt-play">Play</button>
+        <button class="btn" id="yt-pause">Pause</button>
+        <div class="vol">
+          <span style="font-size:11px;color:#ffcc99">VOL</span>
+          <input type="range" id="yt-volume" min="0" max="100" value="50">
+        </div>
+        <div id="yt-status">Idle · <span id="yt-time">0:00</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Audio elements (IDs preserved from working file) -->
+<audio id="engine-start-sound" preload="none"><source src="engineon.mp3" type="audio/mpeg"></audio>
+<audio id="engine-stop-sound" preload="none"><source src="engineoff.mp3" type="audio/mpeg"></audio>
+<audio id="indicator-sound" preload="none"><source src="blinker.mp3" type="audio/mpeg"></audio>
+<audio id="seatbelt-warning-sound" preload="none"><source src="seatbelt.mp3" type="audio/mpeg"></audio>
+<audio id="alarm-sound" preload="none"><source src="alarm.mp3" type="audio/mpeg"></audio>
+<audio id="radio-audio" preload="none"></audio>
+
+<script src="scripts.js.download"></script>
+<!-- Scripts from working 400x400 version -->
+<script>
+(function(){
+  // --- Robust YouTube IFrame API loader with status messages ---
+  var apiRequested = false, apiReady = false, playerReady = false;
+  var pendingVideoId = null;
+  var player = null;
+
+  function $(id){ return document.getElementById(id); }
+  var statusEl = document.getElementById("yt-status") || document.getElementById("radioStatus") || document.getElementById("radio-status");
+  var volEl = $("yt-volume");
+  var urlEl = $("yt-url");
+  var timeEl = $("yt-time");
+
+  function setStatus(msg){
+    if (statusEl) statusEl.textContent = msg;
+  }
+
+  function injectAPI(){
+    if (apiRequested) return;
+    apiRequested = true;
+    setStatus("Loading YouTube API…");
+    var s = document.createElement("script");
+    s.src = "https://www.youtube.com/iframe_api";
+    s.async = true;
+    s.onerror = function(){ setStatus("Failed to load YouTube API (network/CSP)."); };
+    document.head.appendChild(s);
+  }
+
+  // Called by YT API
+  window.onYouTubeIframeAPIReady = function(){
+    apiReady = true;
+    setStatus("YouTube API Ready — paste URL and Load.");
+    if (pendingVideoId) ensurePlayer(pendingVideoId);
+  };
+
+  // Fallback poll in case some environments don't trigger the callback
+  var pollTimer = setInterval(function(){
+    if (apiReady) { clearInterval(pollTimer); return; }
+    if (window.YT && window.YT.Player) {
+      apiReady = true;
+      setStatus("YouTube API Ready — paste URL and Load.");
+      if (pendingVideoId) ensurePlayer(pendingVideoId);
+      clearInterval(pollTimer);
+    }
+  }, 400);
+
+  function parseYouTubeId(url){
+    if (!url) return null;
+    var patterns = [
+      /(?:v=|vi=)([A-Za-z0-9_-]{11})/,
+      /youtu\.be\/([A-Za-z0-9_-]{11})/,
+      /youtube\.com\/live\/([A-Za-z0-9_-]{11})/,
+      /youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/
+    ];
+    for (var i=0;i<patterns.length;i++){
+      var m = url.match(patterns[i]);
+      if (m && m[1]) return m[1];
+    }
+    var m2 = url.match(/([A-Za-z0-9_-]{11})/);
+    return m2 ? m2[1] : null;
+  }
+
+  function ensurePlayer(videoId){
+    if (!videoId){
+      setStatus("Invalid URL — cannot find video ID.");
+      return;
+    }
+    if (!apiReady){
+      pendingVideoId = videoId;
+      injectAPI();
+      setStatus("Waiting for API… then loading video.");
+      return;
+    }
+    if (player){
+      try {
+        player.loadVideoById(videoId);
+        setStatus("Loaded: " + videoId);
+      } catch(e){
+        setStatus("Load error. Recreating player…");
+        try { player.destroy(); } catch(_){}
+        player = null;
+        createPlayer(videoId);
+      }
+      return;
+    }
+    createPlayer(videoId);
+  }
+
+  function createPlayer(videoId){
+    setStatus("Creating player…");
+    player = new YT.Player('yt-player', {
+      host: 'https://www.youtube.com',
+      videoId: videoId,
+      playerVars: {
+        autoplay: 0,
+        controls: 1,
+        rel: 0,
+        playsinline: 1
+        enablejsapi: 1
+      },
+      events: {
+        onReady: function(){
+          playerReady = true;
+          try {
+            var ifr = document.querySelector('#yt-player iframe');
+            if (ifr) {
+              ifr.setAttribute('allow','autoplay; encrypted-media; picture-in-picture; fullscreen');
+              ifr.style.width='100%'; ifr.style.height='100%';
+            }
+          } catch(e){}
+          try {
+            var iv = parseInt((volEl && volEl.value) || "50", 10);
+            if (isNaN(iv)) iv = 50;
+            iv = Math.max(0, Math.min(100, iv));
+            player.setVolume(iv);
+            if (iv>0) try{player.unMute();}catch(e){}
+          } catch(e){}
+          setStatus("Ready — press Play.");
+          if (window.__ytTicker) clearInterval(window.__ytTicker);
+          window.__ytTicker = setInterval(function(){
+            try {
+              if (!player || !timeEl) return;
+              var t = Math.floor(player.getCurrentTime() || 0);
+              var mm = String(Math.floor(t/60));
+              var ss = String(t%60).padStart(2,'0');
+              timeEl.textContent = mm+':'+ss;
+            } catch(e){}
+          }, 500);
+        },
+        onStateChange: function(e){
+          var map = { "-1":"Unstarted", "0":"Ended", "1":"Playing", "2":"Paused", "3":"Buffering", "5":"Cued" };
+          setStatus(map[String(e.data)] || ("State: " + e.data));
+        },
+        onError: function(e){
+          var code = String(e && e.data);
+          var msg = "Error: " + code;
+          if (code === '101' || code === '150') {
+            msg += " — video tidak mengizinkan embed di luar YouTube. Coba akses via HTTPS dan pastikan CSP/iframe diizinkan.";
+          } else if (code === '2') {
+            msg += " — URL/ID tidak valid.";
+          } else if (code === '5') {
+            msg += " — masalah HTML5 player, coba refresh/browser lain.";
+          }
+          setStatus(msg);
+        }
+      }
+    });
+  }
+
+  // Wire UI
+  var loadBtn = document.getElementById("yt-load");
+  var playBtn = document.getElementById("yt-play");
+  var pauseBtn = document.getElementById("yt-pause");
+  if (loadBtn) loadBtn.addEventListener("click", function(){
+    var id = parseYouTubeId((urlEl && urlEl.value || "").trim());
+    if (!apiRequested) injectAPI();
+    ensurePlayer(id);
+  });
+  if (playBtn) playBtn.addEventListener("click", function(){ try { player && player.playVideo(); } catch(e){} });
+  if (pauseBtn) pauseBtn.addEventListener("click", function(){ try { player && player.pauseVideo(); } catch(e){} });
+  if (volEl) volEl.addEventListener("input", function(){
+    try {
+      if (!player) return;
+      var v = parseInt(volEl.value, 10); if (isNaN(v)) v = 0;
+      v = Math.max(0, Math.min(100, v));
+      player.setVolume(v);
+      if (v === 0) { try { player.mute(); } catch(e){} } else { try { player.unMute(); } catch(e){} }
+    } catch(e){}
+  });
+
+  // Auto-init API so user doesn't have to click first
+  injectAPI();
+})();
+
+
+
+(function(){
+  var apiRequested=false, apiReady=false, player=null;
+  function $$(id){return document.getElementById(id);}
+  var statusEl = $$("#yt-status"), volEl = $$("#yt-volume"), urlEl = $$("#yt-url"), timeEl=$$("#yt-time");
+  function setStatus(m){ if(statusEl) statusEl.textContent = m; }
+
+  function injectAPI(){
+    if (apiRequested) return; apiRequested = true;
+    var s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; s.async=true;
+    s.onerror=function(){ setStatus("Gagal memuat YouTube API."); }; document.head.appendChild(s);
+  }
+  window.onYouTubeIframeAPIReady=function(){ apiReady=true; setStatus("YouTube API Ready — tempel URL dan klik Load."); };
+  var poll=setInterval(function(){
+    if(apiReady) return clearInterval(poll);
+    if(window.YT&&window.YT.Player){ apiReady=true; setStatus("YouTube API Ready — tempel URL dan klik Load."); clearInterval(poll); }
+  },400);
+
+  function parseId(url){
+    if(!url) return null;
+    var p=[/(?:v=|vi=)([A-Za-z0-9_-]{11})/,/youtu\.be\/([A-Za-z0-9_-]{11})/,/youtube\.com\/live\/([A-Za-z0-9_-]{11})/,/youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/];
+    for(var i=0;i<p.length;i++){var m=url.match(p[i]); if(m&&m[1]) return m[1];}
+    var m2=url.match(/([A-Za-z0-9_-]{11})/); return m2?m2[1]:null;
+  }
+
+  function createPlayer(videoId){
+    setStatus("Membuat player…");
+    player = new YT.Player('yt-player', {
+      host:'https://www.youtube.com',
+      videoId:videoId,
+      playerVars:{autoplay:0,controls:1,rel:0,playsinline:1enablejsapi:1},
+      events:{
+        onReady:function(){
+          try{ var ifr=document.querySelector('#yt-player iframe'); if(ifr){ ifr.setAttribute('allow','autoplay; encrypted-media; picture-in-picture; fullscreen'); ifr.style.width='100%'; ifr.style.height='100%'; } }catch(e){}
+          try{ var iv=parseInt((volEl&&volEl.value)||"50",10); if(isNaN(iv)) iv=50; iv=Math.max(0,Math.min(100,iv));
+                player.setVolume(iv); if(iv>0) try{player.unMute();}catch(e){} }catch(e){}
+          setStatus("Siap — tekan Play.");
+          if (window.__ytTicker) clearInterval(window.__ytTicker);
+          window.__ytTicker=setInterval(function(){try{if(!player||!timeEl) return; var t=Math.floor(player.getCurrentTime()||0);
+            var mm=String(Math.floor(t/60)), ss=String(t%60).padStart(2,'0'); timeEl.textContent=mm+':'+ss;}catch(e){}},500);
+        },
+        onStateChange:function(e){ var map={"-1":"Unstarted","0":"Ended","1":"Playing","2":"Paused","3":"Buffering","5":"Cued"}; setStatus(map[String(e.data)]||("State: "+e.data)); },
+        onError:function(e){ var code=String(e&&e.data), msg="Error: "+code;
+          if(code==='101'||code==='150'){ msg+=' — video tidak mengizinkan embed.'; }
+          else if(code==='2'){ msg+=' — URL/ID tidak valid.'; }
+          else if(code==='5'){ msg+=' — masalah HTML5 player.'; }
+          setStatus(msg); }
+      }
+    });
+  }
+
+  var loadBtn=$$("#yt-load"), playBtn=$$("#yt-play"), pauseBtn=$$("#yt-pause");
+  if(loadBtn) loadBtn.addEventListener("click", function(){
+    var id=parseId((urlEl&&urlEl.value||"").trim());
+    if(!apiRequested) injectAPI();
+    if(!apiReady){ setStatus("Memuat API…"); var wait=setInterval(function(){ if(apiReady){ clearInterval(wait); createPlayer(id); } },300); }
+    else { if(!player) createPlayer(id); else { try{ player.loadVideoById(id); setStatus("Loaded: "+id); }catch(e){ createPlayer(id); } } }
+  });
+  if(playBtn) playBtn.addEventListener("click", function(){ try{ player&&player.playVideo(); }catch(e){} });
+  if(pauseBtn) pauseBtn.addEventListener("click", function(){ try{ player&&player.pauseVideo(); }catch(e){} });
+  if(volEl) volEl.addEventListener("input", function(){ try{ if(!player) return; var v=parseInt(volEl.value,10); if(isNaN(v)) v=0; v=Math.max(0,Math.min(100,v));
+        player.setVolume(v); if(v===0){try{player.mute();}catch(e){}} else {try{player.unMute();}catch(e){}} }catch(e){} });
+
+  injectAPI();
+})();
+</script>
+
+
+
+
+<script>
+/* ======= YouTube Search (Floating) — patched clicks & player ======= */
+const YT_API_KEY = "AIzaSyBlRhTTd2jWkk5tG570qRFyuhRKqWnGgL0";
+
+(function() {
+  const $ = (id)=>document.getElementById(id);
+  const panel   = $("yt-search-float");
+  const listEl  = $("yt-search-list");
+  const closeEl = $("yt-search-close");
+  const qEl     = $("yt-url");
+  const btn     = $("yt-load");
+  const statusEl= $("yt-status");
+
+  function setStatus(t){ if(statusEl) statusEl.textContent = t; }
+
+  // Ensure YT player exists; if not, create one on #yt-player
+  function ensurePlayerThen(fn, videoIdHint){
+    if (window.__ytPlayer && typeof window.__ytPlayer.loadVideoById === "function"){
+      try { fn(window.__ytPlayer); return; } catch(e){}
+    }
+    function create(videoId){
+      try{
+        var p = new YT.Player('yt-player', {
+          videoId: videoId || undefined,
+          playerVars:{autoplay:0,controls:1,rel:0,playsinline:1enablejsapi:1},
+          events:{ onReady: function(){ window.__ytPlayer = p; try{ fn(p); }catch(e){} } }
+        });
+      }catch(e){ console.warn(e); }
+    }
+    if (window.YT && window.YT.Player) return create(videoIdHint);
+    var s = document.querySelector('script[src*="youtube.com/iframe_api"]');
+    if (!s){ s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; s.async=true; document.head.appendChild(s); }
+    let tries=0; const iv=setInterval(()=>{
+      tries++; if(window.YT&&window.YT.Player){ clearInterval(iv); create(videoIdHint); }
+      else if(tries>30){ clearInterval(iv); setStatus("Gagal inisialisasi player."); }
+    }, 200);
+  }
+
+  function openPanel(){ panel && panel.classList.remove("hidden"); }
+  function closePanel(){ panel && panel.classList.add("hidden"); }
+
+  let lastQuery = ""; let nextPageToken = null; let isLoading = false; let currentPlayingVid = null;
+
+  function makeItemElement(vid, sn){
+    const thumb = sn?.thumbnails?.medium || sn?.thumbnails?.default;
+    const el = document.createElement("div");
+    el.className = "search-item";
+    el.setAttribute("data-vid", vid || "");
+    if (currentPlayingVid && currentPlayingVid === vid) el.classList.add("active");
+    el.innerHTML = `
+      <div class="search-thumb">${thumb?`<img src="${thumb.url}" alt="">`:""}</div>
+      <div class="search-meta"><div class="search-title-line">${(sn?.title||"").replace(/</g,"&lt;")}</div></div>`;
+    return el;
+  }
+
+  async function fetchResults(query, append=false){
+    if(isLoading) return; isLoading = true;
+    try{
+      let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=${encodeURIComponent(query)}&key=${YT_API_KEY}`;
+      if (append && nextPageToken) url += `&pageToken=${encodeURIComponent(nextPageToken)}`;
+      const resp = await fetch(url);
+      const data = await resp.json();
+      nextPageToken = data.nextPageToken || null;
+      const items = data.items || [];
+      if (!append) listEl.innerHTML = "";
+      const frag = document.createDocumentFragment();
+      items.forEach(it=>{ const vid = it?.id?.videoId; const sn = it?.snippet || {}; frag.appendChild(makeItemElement(vid, sn)); });
+      listEl.appendChild(frag);
+      openPanel();
+    }catch(e){ console.error(e); if(!append) listEl.innerHTML='<div style="font-size:11px;color:#ffcc99">Gagal memuat hasil.</div>'; openPanel(); }
+    finally{ isLoading = false; }
+  }
+
+  // Delegate clicks: load video by id
+  if (listEl){
+    listEl.addEventListener("click", (ev)=>{
+      const item = ev.target.closest(".search-item"); if(!item) return;
+      const vid = item.getAttribute("data-vid"); if(!vid) return;
+      // Try direct load via YT player; fallback to original flow by setting URL + clicking button
+      ensurePlayerThen((player)=>{
+        try{
+          player.loadVideoById(vid); setStatus("Loaded: "+vid);
+        } catch(e){
+          if (qEl) qEl.value = "https://youtu.be/" + vid;
+          if (btn) btn.click();
+        }
+      }, vid);
+      currentPlayingVid = vid;
+      listEl.querySelectorAll(".search-item.active").forEach(n=>n.classList.remove("active"));
+      item.classList.add("active");
+      closePanel();
+    });
+  }
+
+  // Infinite scroll
+  if (listEl){
+    listEl.addEventListener("scroll", ()=>{
+      if (isLoading || !nextPageToken) return;
+      const nearBottom = (listEl.scrollTop + listEl.clientHeight) >= (listEl.scrollHeight - 24);
+      if (nearBottom) fetchResults(lastQuery, true);
+    });
+  }
+
+  // Bind Cari button to search
+  if (btn){
+    btn.addEventListener("click", (ev)=>{
+      ev.preventDefault(); ev.stopPropagation();
+      const q = (qEl && qEl.value || "").trim();
+      if (!q){ if (panel.classList.contains("hidden")) openPanel(); else closePanel(); return; }
+      lastQuery = q; nextPageToken = null; fetchResults(q, false);
+    }, true);
+  }
+
+  if (closeEl) closeEl.addEventListener("click", closePanel);
+})();
+</script>
+
+
+<script>
+// YOUTUBE_VOLUME_PATCH_START
+(function(){
+  const volEl = document.getElementById('yt-volume');
+  if (!volEl) return;
+  function setVol(v){
+    v = Math.max(0, Math.min(100, parseInt(v || '0', 10)));
+    try{
+      if (window.__ytPlayer && typeof window.__ytPlayer.setVolume === 'function'){
+        window.__ytPlayer.setVolume(v);
+        if (v === 0 && window.__ytPlayer.mute) window.__ytPlayer.mute();
+        else if (window.__ytPlayer.unMute) window.__ytPlayer.unMute();
+      }
+    }catch(e){ console.warn('Set volume fail', e); }
+  }
+  // On input & change
+  volEl.addEventListener('input', (e)=> setVol(e.target.value));
+  volEl.addEventListener('change', (e)=> setVol(e.target.value));
+  // Initialize once on load
+  setTimeout(()=> setVol(volEl.value || 50), 400);
+})();
+// YOUTUBE_VOLUME_PATCH_END
+</script>
+
+</body>
+</html>
