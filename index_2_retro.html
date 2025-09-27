@@ -131,6 +131,11 @@ p0px;height: calc(600px * 10 / 16)}
 .media-card.expanded .media-mini{ margin-bottom:4px; }
 .media-card.expanded .media-ctrl{ margin-top:6px; }
 
+
+/* Keep visual layout when speed-value & speed-unit are direct children */
+.speed-row{grid-template-columns:auto 1fr auto;align-items:end}
+#speed-value{display:block}
+
 </style>
 </head>
 <body>
@@ -188,8 +193,11 @@ p0px;height: calc(600px * 10 / 16)}
       </div>
 
       <div class="speed-row">
-        <div class="speed-left">
-          <div class="unit">Speed</div><span id="speed-value">000</span><span id="speed-unit">km/h</span><span id="speedvalue" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></span><span id="speedunit" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></span>
+          <div class="unit">Speed</div>
+  <div id="speed-value">000</div>
+  <div id="speed-unit">km/h</div>
+</div>
+          <div><span id="speed-value">000</span><span id="speed-unit">km/h</span></div>
         </div>
         <div class="gear-inline"><span class="gear-text">GEAR</span><span id="gear-value">N</span></div>
       </div>
@@ -301,29 +309,5 @@ const YT_API_KEY = "AIzaSyBlRhTTd2jWkk5tG570qRFyuhRKqWnGgL0"; // base
     if(qEl){ qEl.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ const q=(qEl&&qEl.value||'').trim(); if(!q) open(); else search(q); } }); }
   })();
 </script>
-
-<script>
-(function(){
-  const v = document.getElementById('speed-value');
-  const u = document.getElementById('speed-unit');
-  const mv = document.getElementById('speedvalue');
-  const mu = document.getElementById('speedunit');
-  function sync(){
-    if(!v||!u||!mv||!mu) return;
-    mv.textContent = (v.textContent||'').trim();
-    mu.textContent = (u.textContent||'').trim();
-  }
-  sync();
-  try {
-    const obs = new MutationObserver(sync);
-    if(v) obs.observe(v, {childList:true, characterData:true, subtree:true});
-    if(u) obs.observe(u, {childList:true, characterData:true, subtree:true});
-  } catch(_) {}
-  // Also expose simple getters in case the reader calls window.*
-  window.getSpeedValue = () => (v && v.textContent || '').trim();
-  window.getSpeedUnit  = () => (u && u.textContent || '').trim();
-})();
-</script>
-
 </body>
 </html>
