@@ -3,13 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dashboard Retro Classic – Fire Dept Accents (Base V2 + YouTube Resize)</title>
+<title>Dashboard Retro Classic – Fire Dept Accents (Base V2 + Resize kiri 500px 16:9)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --text:#fff5e1; --muted:#f3d7a2; --accent:#b22222; --accent2:#d4af37;
-  --panel:#1b0f0f; --panel2:#2a1717; --stroke:rgba(212,175,55,.45); --glass:rgba(212,175,55,.10);
-}
+:root{ --text:#fff5e1; --muted:#f3d7a2; --accent:#b22222; --accent2:#d4af37; --panel:#1b0f0f; --panel2:#2a1717; --stroke:rgba(212,175,55,.45); --glass:rgba(212,175,55,.10); }
 *{box-sizing:border-box}
 body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
 .dashboard-container{position:fixed;right:10px;bottom:35px;width:300px;display:grid;gap:8px;pointer-events:none}
@@ -34,7 +31,33 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
 .search-thumb img{width:100%;height:100%;object-fit:cover}
 .search-title-line{font-size:11px;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
 
-/* Speed & Info */
+/* YouTube Card */
+.media-card{display:none;width:300px;position:relative}
+.media-card.active{display:block}
+/* expanded ke kiri, tidak menyentuh tepi atas/bawah */
+.media-card.expanded{position:fixed;right:calc(300px + 20px);bottom:50px;width:500px;height:calc(500px * 9 / 16)}
+.media-card .inner{padding:8px 10px;display:flex;flex-direction:column;gap:6px;height:100%}
+.media-mini{display:flex;gap:6px;align-items:center}
+.media-mini input{flex:1;font-size:11px;padding:6px 8px;color:var(--text);background:#231515;border:1px solid var(--stroke);border-radius:8px;outline:none}
+.btn{border:1px solid var(--stroke);background:var(--glass);color:var(--text);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700}
+#yt-player{width:100%;height:100%;flex:1;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 12px rgba(212,175,55,.25)}
+.media-ctrl{display:grid;grid-template-columns:auto auto auto 1fr;gap:6px;align-items:center}
+.vol{display:flex;gap:6px;align-items:center}
+.vol input[type=range]{width:100%;height:4px;-webkit-appearance:none;background:#0f0a0a;border-radius:3px;border:1px solid var(--stroke)}
+.vol input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent2);box-shadow:0 0 6px rgba(212,175,55,.6)}
+#yt-status{grid-column:1 / -1;font-size:10px;color:var(--muted)}
+
+/* Spotify Card (embed URL) */
+.spotify-card{display:none}
+.spotify-card.active{display:block}
+.spotify-card .inner{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.sp-mini{display:flex;gap:6px;align-items:center}
+.sp-mini input{flex:1;font-size:11px;padding:6px 8px;color:var(--text);background:#231515;border:1px solid var(--stroke);border-radius:8px;outline:none}
+.sp-btn{border:1px solid var(--stroke);background:var(--glass);color:var(--text);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700}
+#sp-player{width:100%;height:112px;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 12px rgba(212,175,55,.25)}
+#sp-status{font-size:10px;color:var(--muted)}
+
+/* Speedometer */
 .speed-row{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:8px}
 .speed-left{display:flex;align-items:center;gap:6px}
 .unit{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:2px 6px;border:1px solid var(--stroke);border-radius:6px;background:var(--glass)}
@@ -56,31 +79,6 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
 .horizontal-indicators-container{display:flex;justify-content:center;gap:10px;margin-top:6px;flex-wrap:wrap}
 .icon{flex:0 1 auto;width:17px;height:17px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--stroke);background:var(--glass);fill:var(--muted);stroke:var(--muted);padding:2px}
 .icon.active{fill:var(--accent2);stroke:var(--accent2);box-shadow:0 0 5px rgba(212,175,55,.55),0 0 10px rgba(178,34,34,.45)}
-
-/* YouTube Card */
-.media-card{display:none;width:300px}
-.media-card.active{display:block}
-.media-card.large{width:800px;height:600px}
-.media-card .inner{padding:8px 10px;display:flex;flex-direction:column;gap:6px;height:100%}
-.media-mini{display:flex;gap:6px;align-items:center}
-.media-mini input{flex:1;font-size:11px;padding:6px 8px;color:var(--text);background:#231515;border:1px solid var(--stroke);border-radius:8px;outline:none}
-.btn{border:1px solid var(--stroke);background:var(--glass);color:var(--text);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700}
-#yt-player{width:100%;height:100%;flex:1;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 12px rgba(212,175,55,.25)}
-.media-ctrl{display:grid;grid-template-columns:auto auto auto 1fr;gap:6px;align-items:center}
-.vol{display:flex;gap:6px;align-items:center}
-.vol input[type=range]{width:100%;height:4px;-webkit-appearance:none;background:#0f0a0a;border-radius:3px;border:1px solid var(--stroke)}
-.vol input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent2);box-shadow:0 0 6px rgba(212,175,55,.6)}
-#yt-status{grid-column:1 / -1;font-size:10px;color:var(--muted)}
-
-/* Spotify Card (embed URL) */
-.spotify-card{display:none}
-.spotify-card.active{display:block}
-.spotify-card .inner{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
-.sp-mini{display:flex;gap:6px;align-items:center}
-.sp-mini input{flex:1;font-size:11px;padding:6px 8px;color:var(--text);background:#231515;border:1px solid var(--stroke);border-radius:8px;outline:none}
-.sp-btn{border:1px solid var(--stroke);background:var(--glass);color:var(--text);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700}
-#sp-player{width:100%;height:112px;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 12px rgba(212,175,55,.25)}
-#sp-status{font-size:10px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -183,18 +181,15 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
   document.getElementById('btn-A').addEventListener('click', ()=>{
     const yt = document.getElementById('media-panel');
     yt.classList.toggle('active');
-    // hide Spotify when YouTube shown
     document.getElementById('spotify-panel').classList.remove('active');
   });
   document.getElementById('btn-B').addEventListener('click', ()=>{
     const sp = document.getElementById('spotify-panel');
     sp.classList.toggle('active');
-    // hide YouTube when Spotify shown
     document.getElementById('media-panel').classList.remove('active');
   });
-  // Optional: C/D can be wired later
 
-  // YouTube player + controls
+  // YT Iframe API + kontrol
   (function(){
     let apiLoaded=false, player=null, waitingId=null; const $=id=>document.getElementById(id);
     const statusEl=$("yt-status"), volEl=$("yt-volume"), urlEl=$("yt-url"), timeEl=$("yt-time"), resizeBtn=$("yt-resize"), mediaPanel=$("media-panel");
@@ -204,7 +199,7 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
     function parseId(url){ if(!url) return null; const p=[/(?:v=|vi=)([A-Za-z0-9_-]{11})/,/youtu\.be\/([A-Za-z0-9_-]{11})/,/youtube\.com\/live\/([A-Za-z0-9_-]{11})/,/youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/]; for(const r of p){ const m=url.match(r); if(m&&m[1]) return m[1]; } const m2=url.match(/([A-Za-z0-9_-]{11})/); return m2?m2[1]:null; }
     function ensure(videoId){ if(!videoId) return; if(!window.YT||!window.YT.Player){ waitingId=videoId; inject(); return; }
       waitingId=null; if(player){ try{ player.loadVideoById(videoId); setStatus('Loaded: '+videoId); return; }catch(e){ try{player.destroy();}catch(_){} player=null; }}
-      player=new YT.Player('yt-player',{videoId, playerVars:{autoplay:0,controls:1,rel:0,playsinline:1,origin:location.origin,enablejsapi:1}, events:{ onReady(){ try{ if(volEl) volEl.value='20'; player.setVolume(20); player.unMute&&player.unMute(); }catch(_){} 
+      player=new YT.Player('yt-player',{videoId, playerVars:{autoplay:0,controls:1,rel:0,playsinline:1,origin:location.origin,enablejsapi:1}, events:{ onReady(){ try{ if(volEl) volEl.value='20'; player.setVolume(20); player.unMute&&player.unMute(); }catch(_){}
           setStatus('Ready — press Play.');
           if(window.__ytTicker) clearInterval(window.__ytTicker);
           window.__ytTicker=setInterval(()=>{ try{ if(!player||!timeEl) return; const t=Math.floor(player.getCurrentTime()||0); const mm=String(Math.floor(t/60)); const ss=String(t%60).padStart(2,'0'); timeEl.textContent=mm+':'+ss; }catch(_){} },500);
@@ -217,9 +212,8 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
     });
     if(playBtn) playBtn.addEventListener('click',()=>{ try{ player&&player.playVideo(); }catch(_){} });
     if(pauseBtn) pauseBtn.addEventListener('click',()=>{ try{ player&&player.pauseVideo(); }catch(_){} });
-    if(resizeBtn) resizeBtn.addEventListener('click',()=>{ mediaPanel.classList.toggle('large'); });
+    if(resizeBtn) resizeBtn.addEventListener('click',()=>{ mediaPanel.classList.toggle('expanded'); });
     if(volEl) volEl.addEventListener('input',()=>{ try{ if(!player) return; let v=parseInt(volEl.value,10)||0; v=Math.max(0,Math.min(100,v)); player.setVolume(v); if(v===0) player.mute&&player.mute(); else player.unMute&&player.unMute(); }catch(_){} });
-    // expose ensure for search clicks
     window.__ytEnsure = ensure;
   })();
 
@@ -230,21 +224,15 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
     const playerEl=document.getElementById('sp-player');
     const statusEl=document.getElementById('sp-status');
     function setStatus(t){ if(statusEl) statusEl.textContent=t; }
-    function normalizeToEmbed(url){
-      if(!url) return null;
-      try{ const u=new URL(url); if(u.hostname.includes('open.spotify.com')){ const path=u.pathname.replace(/\/$/,''); return `https://open.spotify.com/embed${path}${u.search||''}`; } if(/^[A-Za-z0-9]{22}$/.test(url)) return `https://open.spotify.com/embed/track/${url}`; }
-      catch(_){ if(/^[A-Za-z0-9]{22}$/.test(url)) return `https://open.spotify.com/embed/track/${url}`; }
-      return null;
-    }
-    function load(){ const raw=(urlEl&&urlEl.value||'').trim(); const src=normalizeToEmbed(raw); if(!src){ setStatus('URL tidak dikenali. Gunakan tautan Spotify: track/album/playlist.'); return; }
-      playerEl.innerHTML=`<iframe style="border-radius:10px" src="${src}" width="100%" height="112" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`; setStatus('Memuat Spotify Embed…'); }
+    function normalizeToEmbed(url){ if(!url) return null; try{ const u=new URL(url); if(u.hostname.includes('open.spotify.com')){ const path=u.pathname.replace(/\/$/,''); return `https://open.spotify.com/embed${path}${u.search||''}`; } if(/^[A-Za-z0-9]{22}$/.test(url)) return `https://open.spotify.com/embed/track/${url}`; } catch(_){ if(/^[A-Za-z0-9]{22}$/.test(url)) return `https://open.spotify.com/embed/track/${url}`; } return null; }
+    function load(){ const raw=(urlEl&&urlEl.value||'').trim(); const src=normalizeToEmbed(raw); if(!src){ setStatus('URL tidak dikenali. Gunakan tautan Spotify: track/album/playlist.'); return; } playerEl.innerHTML=`<iframe style="border-radius:10px" src="${src}" width="100%" height="112" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`; setStatus('Memuat Spotify Embed…'); }
     if(loadBtn) loadBtn.addEventListener('click', load);
     if(urlEl) urlEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter') load(); });
   })();
 
   // YouTube Search overlay (Data API v3)
   (function(){
-    const YT_API_KEY = "AIzaSyBlRhTTd2jWkk5tG570qRFyuhRKqWnGgL0"; // dari base
+    const YT_API_KEY = "AIzaSyBlRhTTd2jWkk5tG570qRFyuhRKqWnGgL0"; // base
     const panel=document.getElementById('yt-search-float');
     const listEl=document.getElementById('yt-search-list');
     const closeBtn=document.getElementById('yt-search-close');
@@ -254,11 +242,7 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
     function open(){ panel&&panel.classList.remove('hidden'); }
     function close(){ panel&&panel.classList.add('hidden'); }
     window.toggleSearch=function(){ if(!panel) return; if(panel.classList.contains('hidden')) open(); else close(); };
-    async function search(q){ try{ if(!q){ open(); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Masukkan kata kunci…</div>'; return; } open(); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Mencari…</div>';
-      const url=`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=${encodeURIComponent(q)}&key=${YT_API_KEY}`;
-      const resp=await fetch(url); const data=await resp.json(); const items=data.items||[]; listEl.innerHTML=''; if(!items.length){ listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Tidak ada hasil.</div>'; return; }
-      const frag=document.createDocumentFragment(); items.forEach(it=>{ const vid=it?.id?.videoId; const sn=it?.snippet||{}; const t=sn?.title||''; const th=sn?.thumbnails?.medium||sn?.thumbnails?.default; const el=document.createElement('div'); el.className='search-item'; el.setAttribute('data-vid', vid||''); el.innerHTML=`<div class="search-thumb">${th?`<img src="${th.url}" alt="">`:''}</div><div class="search-meta"><div class="search-title-line">${t.replace(/</g,'&lt;')}</div></div>`; frag.appendChild(el); }); listEl.appendChild(frag); }
-      catch(e){ console.warn(e); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Gagal memuat hasil.</div>'; open(); } }
+    async function search(q){ try{ if(!q){ open(); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Masukkan kata kunci…</div>'; return; } open(); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Mencari…</div>'; const url=`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=${encodeURIComponent(q)}&key=${YT_API_KEY}`; const resp=await fetch(url); const data=await resp.json(); const items=data.items||[]; listEl.innerHTML=''; if(!items.length){ listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Tidak ada hasil.</div>'; return; } const frag=document.createDocumentFragment(); items.forEach(it=>{ const vid=it?.id?.videoId; const sn=it?.snippet||{}; const t=sn?.title||''; const th=sn?.thumbnails?.medium||sn?.thumbnails?.default; const el=document.createElement('div'); el.className='search-item'; el.setAttribute('data-vid', vid||''); el.innerHTML=`<div class="search-thumb">${th?`<img src="${th.url}" alt="">`:''}</div><div class="search-meta"><div class="search-title-line">${t.replace(/</g,'&lt;')}</div></div>`; frag.appendChild(el); }); listEl.appendChild(frag); } catch(e){ console.warn(e); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Gagal memuat hasil.</div>'; open(); } }
     window.__ytDoSearch=search;
     if(listEl){ listEl.addEventListener('click',(ev)=>{ const item=ev.target.closest('.search-item'); if(!item) return; const vid=item.getAttribute('data-vid'); if(!vid) return; try{ window.__ytEnsure && window.__ytEnsure(vid); setStatus('Loaded: '+vid);}catch(_){} close(); }); }
     if(closeBtn) closeBtn.addEventListener('click', close);
