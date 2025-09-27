@@ -324,7 +324,7 @@ const YT_API_KEY = "AIzaSyBlRhTTd2jWkk5tG570qRFyuhRKqWnGgL0"; // base
     return Math.round(n);
   }
 
-  window.setSpeed       = function(v){ setText('speed-value', fmtInt(v)); setText('speedvalue', fmtInt(v)); };
+  window.setSpeed       = function(v){ setText('speed-value', v); setText('speedvalue', v); };
   window.setSpeedUnit   = function(u){ setText('speed-unit', String(u ?? '')); setText('speedunit', String(u ?? '')); };
   window.setRPM         = function(v){ setText('rpm-value', fmtInt(v)); };
   window.setGear        = function(v){ setText('gear-value', fmtInt(v)); };
