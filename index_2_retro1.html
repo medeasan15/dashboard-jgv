@@ -189,7 +189,7 @@ p0px;height: calc(600px * 10 / 16)}
 
       <div class="speed-row">
         <div class="speed-left">
-          <div class="unit">Speed</div><span id="speed-value">000</span><span id="speed-unit">km/h</span><span id="speedvalue" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></span><span id="speedunit" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></span>
+          <div class="unit">Speed</div> <span id="speed-value">000</span><span id="speed-unit">km/h</span>
         </div>
         <div class="gear-inline"><span class="gear-text">GEAR</span><span id="gear-value">N</span></div>
       </div>
@@ -304,26 +304,70 @@ const YT_API_KEY = "AIzaSyBlRhTTd2jWkk5tG570qRFyuhRKqWnGgL0"; // base
 
 <script>
 (function(){
-  const v = document.getElementById('speed-value');
-  const u = document.getElementById('speed-unit');
-  const mv = document.getElementById('speedvalue');
-  const mu = document.getElementById('speedunit');
-  function sync(){
-    if(!v||!u||!mv||!mu) return;
-    mv.textContent = (v.textContent||'').trim();
-    mu.textContent = (u.textContent||'').trim();
+  function $(id){ return document.getElementById(id); }
+  function setText(id, val){ var el = $(id); if(!el) return; el.textContent = (val==null?'':String(val)); }
+  
+  // --- Formatting helpers: force integers (no decimals) ---
+  function fmtInt(v){
+    if(v == null || v === '') return '';
+    var n = Number(v);
+    if (isNaN(n)) return String(v);
+    return Math.round(n);
   }
-  sync();
-  try {
-    const obs = new MutationObserver(sync);
-    if(v) obs.observe(v, {childList:true, characterData:true, subtree:true});
-    if(u) obs.observe(u, {childList:true, characterData:true, subtree:true});
-  } catch(_) {}
-  // Also expose simple getters in case the reader calls window.*
-  window.getSpeedValue = () => (v && v.textContent || '').trim();
-  window.getSpeedUnit  = () => (u && u.textContent || '').trim();
+  function fmtPct(v){
+    if (v == null || v === '') return '';
+    if (typeof v === 'string' && v.indexOf('%') !== -1) return v;
+    var n = Number(v);
+    if (isNaN(n)) return String(v);
+    // If value looks like percentage (0..100), append %
+    if (n >= 0 && n <= 100) return Math.round(n) + '%';
+    return Math.round(n);
+  }
+
+  window.setSpeed       = function(v){ setText('speed-value', fmtInt(v)); setText('speedvalue', fmtInt(v)); };
+  window.setSpeedUnit   = function(u){ setText('speed-unit', String(u ?? '')); setText('speedunit', String(u ?? '')); };
+  window.setRPM         = function(v){ setText('rpm-value', fmtInt(v)); };
+  window.setGear        = function(v){ setText('gear-value', fmtInt(v)); };
+  window.setFuel        = function(v){ setText('fuel-value', fmtInt(v)); };
+  window.setHealth      = function(v){ setText('health-value', fmtPct(v)); };
+
+  function handle(data){
+    try{
+      if(!data) return;
+      var speed = data.speed ?? data.Speed ?? data.speedValue ?? data['speed-value'] ?? data.s ?? null;
+      var unit  = data.unit ?? data.Unit ?? data.speedUnit ?? data['speed-unit'] ?? data.u ?? null;
+      var rpm   = data.rpm ?? data.RPM ?? data['rpm-value'] ?? data.r ?? null;
+      var gear  = data.gear ?? data.Gear ?? data['gear-value'] ?? data.g ?? null;
+      var fuel  = data.fuel ?? data.Fuel ?? data['fuel-value'] ?? data.f ?? null;
+      var hpct  = data.health ?? data.Health ?? data['health-value'] ?? data.h ?? null;
+      if(speed != null) window.setSpeed(speed);
+      if(unit  != null) window.setSpeedUnit(unit);
+      if(rpm   != null) window.setRPM(rpm);
+      if(gear  != null) window.setGear(gear);
+      if(fuel  != null) window.setFuel(fuel);
+      if(hpct  != null) window.setHealth(hpct);
+    }catch(e){}
+  }
+  window.addEventListener('message', function(ev){
+    var d = ev && ev.data;
+    if(typeof d === 'string'){
+      var m = d.match(/^(speed|rpm|gear|unit|fuel|health)[:=]\s*(.+)$/i);
+      if(m){
+        var key = m[1].toLowerCase(), val = m[2];
+        var map = {speed:'setSpeed', rpm:'setRPM', gear:'setGear', unit:'setSpeedUnit', fuel:'setFuel', health:'setHealth'};
+        if(window[map[key]]) window[map[key]](val);
+        return;
+      }
+      try{ d = JSON.parse(d); }catch(_){ d = null; }
+    }
+    if(d) handle(d);
+  });
+  (function syncMirrors(){
+    var mv = $('speedvalue'), mu = $('speedunit');
+    if(mv){ mv.textContent = ($('speed-value')?.textContent||'').trim(); }
+    if(mu){ mu.textContent = ($('speed-unit')?.textContent||'').trim(); }
+  })();
 })();
 </script>
-
 </body>
 </html>
