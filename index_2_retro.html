@@ -17,6 +17,9 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
 .custom-buttons{display:flex;justify-content:space-around;margin-bottom:8px}
 .custom-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--stroke);background:var(--glass);color:var(--text);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 6px rgba(212,175,55,.25)}
 .custom-btn:hover{background:rgba(212,175,55,.15)}
+/* icon sizing for A/B buttons */
+.custom-btn svg{width:18px;height:18px;display:block;margin:auto}
+
 
 /* Search Float (YouTube) */
 .search-float{pointer-events:auto;position:absolute;top:0;right:calc(300px + 12px);width:300px;max-height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--stroke);border-radius:12px;box-shadow:0 0 18px rgba(0,0,0,.45),0 8px 28px rgba(0,0,0,.35);padding:8px;opacity:.98;backdrop-filter:blur(2px);z-index:9999}
@@ -35,7 +38,7 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
 .media-card{display:none;width:300px;position:relative}
 .media-card.active{display:block}
 /* expanded ke kiri, tidak menyentuh tepi atas/bawah */
-.media-card.expanded{position:fixed;right:calc(300px + 20px);bottom:50px;width:500px;height:calc(500px * 9 / 16)}
+p0px;height: calc(600px * 10 / 16)}
 .media-card .inner{padding:8px 10px;display:flex;flex-direction:column;gap:6px;height:100%}
 .media-mini{display:flex;gap:6px;align-items:center}
 .media-mini input{flex:1;font-size:11px;padding:6px 8px;color:var(--text);background:#231515;border:1px solid var(--stroke);border-radius:8px;outline:none}
@@ -79,6 +82,55 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
 .horizontal-indicators-container{display:flex;justify-content:center;gap:10px;margin-top:6px;flex-wrap:wrap}
 .icon{flex:0 1 auto;width:17px;height:17px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--stroke);background:var(--glass);fill:var(--muted);stroke:var(--muted);padding:2px}
 .icon.active{fill:var(--accent2);stroke:var(--accent2);box-shadow:0 0 5px rgba(212,175,55,.55),0 0 10px rgba(178,34,34,.45)}
+
+/* Icon sizing for A/B buttons with external images */
+.custom-btn img{
+  width:20px;
+  height:auto;
+  display:block;
+  margin:auto;
+}
+
+
+/* Icon sizing for A/B and full buttons with external images */
+.custom-btn img,
+#btn-full img{
+  width:20px;
+  height:auto;
+  display:block;
+  margin:auto;
+}
+
+
+/* Icon sizing for A/B buttons and resize button */
+.custom-btn img,
+#yt-resize img{
+  width:20px;
+  height:auto;
+  display:block;
+  margin:auto;
+  pointer-events:none; /* allow button click-through */
+}
+
+
+/* Expanded panel size and position */
+.media-card.expanded{
+  position:fixed;
+  right:calc(300px + 20px);
+  bottom:50px;
+  width:600px;
+  height:calc(600px * 10 / 16);
+  z-index:9999;
+}
+
+
+/* Make video area dominant in expanded mode */
+.media-card.expanded .inner{ padding:8px 10px 8px; gap:6px; height:100%; }
+.media-card.expanded #yt-player{ width:100%; height:calc(100% - 92px); }
+.media-card.expanded #yt-player iframe{ width:100%; height:100%; display:block; }
+.media-card.expanded .media-mini{ margin-bottom:4px; }
+.media-card.expanded .media-ctrl{ margin-top:6px; }
+
 </style>
 </head>
 <body>
@@ -103,7 +155,7 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
       <div class="media-ctrl">
         <button class="btn" id="yt-play">Play</button>
         <button class="btn" id="yt-pause">Pause</button>
-        <button class="btn" id="yt-resize">Full</button>
+        <button class="btn" id="yt-resize"><img src="https://cdn-icons-png.flaticon.com/512/5642/5642608.png" alt=""/></button>
         <div class="vol">
           <span style="font-size:11px;color:var(--muted)">VOL</span>
           <input type="range" id="yt-volume" min="0" max="100" value="20">
@@ -129,8 +181,8 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
   <div class="speedometer-container card" id="speed-card">
     <div class="inner">
       <div class="custom-buttons">
-        <div class="custom-btn" id="btn-A">A</div>
-        <div class="custom-btn" id="btn-B">B</div>
+        <div class="custom-btn" id="btn-A"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="" /></div>
+        <div class="custom-btn" id="btn-B"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1200px-Spotify_logo_without_text.svg.png" alt="" /></div>
         <div class="custom-btn" id="btn-C">C</div>
         <div class="custom-btn" id="btn-D">D</div>
       </div>
@@ -232,7 +284,8 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
 
   // YouTube Search overlay (Data API v3)
   (function(){
-    const YT_API_KEY = "AIzaSyBlRhTTd2jWkk5tG570qRFyuhRKqWnGgL0"; // base
+    const mediaPanel=document.getElementById('media-panel'); const searchPanel=document.getElementById('yt-search-float'); function collapseFull(){ try{ mediaPanel&&mediaPanel.classList.remove('expanded'); }catch(_){}} function closeSearch(){ try{ searchPanel&&searchPanel.classList.add('hidden'); }catch(_){}}
+const YT_API_KEY = "AIzaSyBlRhTTd2jWkk5tG570qRFyuhRKqWnGgL0"; // base
     const panel=document.getElementById('yt-search-float');
     const listEl=document.getElementById('yt-search-list');
     const closeBtn=document.getElementById('yt-search-close');
@@ -242,7 +295,7 @@ body{margin:0;background:transparent;color:var(--text);font-family:Inter,system-
     function open(){ panel&&panel.classList.remove('hidden'); }
     function close(){ panel&&panel.classList.add('hidden'); }
     window.toggleSearch=function(){ if(!panel) return; if(panel.classList.contains('hidden')) open(); else close(); };
-    async function search(q){ try{ if(!q){ open(); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Masukkan kata kunci…</div>'; return; } open(); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Mencari…</div>'; const url=`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=${encodeURIComponent(q)}&key=${YT_API_KEY}`; const resp=await fetch(url); const data=await resp.json(); const items=data.items||[]; listEl.innerHTML=''; if(!items.length){ listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Tidak ada hasil.</div>'; return; } const frag=document.createDocumentFragment(); items.forEach(it=>{ const vid=it?.id?.videoId; const sn=it?.snippet||{}; const t=sn?.title||''; const th=sn?.thumbnails?.medium||sn?.thumbnails?.default; const el=document.createElement('div'); el.className='search-item'; el.setAttribute('data-vid', vid||''); el.innerHTML=`<div class="search-thumb">${th?`<img src="${th.url}" alt="">`:''}</div><div class="search-meta"><div class="search-title-line">${t.replace(/</g,'&lt;')}</div></div>`; frag.appendChild(el); }); listEl.appendChild(frag); } catch(e){ console.warn(e); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Gagal memuat hasil.</div>'; open(); } }
+    async function search(q){ try{ collapseFull(); if(!q){ open(); collapseFull(); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Masukkan kata kunci…</div>'; return; } open(); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Mencari…</div>'; const url=`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=${encodeURIComponent(q)}&key=${YT_API_KEY}`; const resp=await fetch(url); const data=await resp.json(); const items=data.items||[]; listEl.innerHTML=''; if(!items.length){ listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Tidak ada hasil.</div>'; return; } const frag=document.createDocumentFragment(); items.forEach(it=>{ const vid=it?.id?.videoId; const sn=it?.snippet||{}; const t=sn?.title||''; const th=sn?.thumbnails?.medium||sn?.thumbnails?.default; const el=document.createElement('div'); el.className='search-item'; el.setAttribute('data-vid', vid||''); el.innerHTML=`<div class="search-thumb">${th?`<img src="${th.url}" alt="">`:''}</div><div class="search-meta"><div class="search-title-line">${t.replace(/</g,'&lt;')}</div></div>`; frag.appendChild(el); }); listEl.appendChild(frag); } catch(e){ console.warn(e); listEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Gagal memuat hasil.</div>'; open(); } }
     window.__ytDoSearch=search;
     if(listEl){ listEl.addEventListener('click',(ev)=>{ const item=ev.target.closest('.search-item'); if(!item) return; const vid=item.getAttribute('data-vid'); if(!vid) return; try{ window.__ytEnsure && window.__ytEnsure(vid); setStatus('Loaded: '+vid);}catch(_){} close(); }); }
     if(closeBtn) closeBtn.addEventListener('click', close);
